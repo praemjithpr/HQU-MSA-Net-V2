@@ -3,909 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basalt • HQU-MSANet Quantum Neuro-Radiology Suite</title>
+    <title>HQU-MSANet &bull; The Neuro-Radiology Suite</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ================= DARK DEVELOPER-TOOL PALETTE & RESET ================= */
+        /* ================= ART DECO DESIGN SYSTEM TOKENS ================= */
         :root {
-            --canvas-bg: #07080a;
-            --surface-bg: rgba(14, 16, 22, 0.75);
-            --surface-card: rgba(18, 21, 29, 0.65);
-            --surface-card-hover: rgba(24, 28, 38, 0.75);
-            --hairline-border: rgba(255, 255, 255, 0.08);
-            --hairline-border-hover: rgba(255, 255, 255, 0.16);
+            --bg-obsidian: #0A0A0A;
+            --bg-charcoal: #141414;
+            --bg-surface: #101010;
+            --fg-cream: #F2F0E4;
+            --fg-muted: #888888;
+            --gold-primary: #D4AF37;
+            --gold-light: #F2E8C4;
+            --gold-dark: #997A15;
+            --gold-dim: rgba(212, 175, 55, 0.25);
+            --gold-glow: rgba(212, 175, 55, 0.35);
+            --midnight-blue: #1E3D59;
 
-            /* Warm Aurora Chroma */
-            --aurora-crimson: #ff2f3a;
-            --aurora-coral: #ff6b4a;
-            --aurora-amber: #ffb347;
-            --aurora-warm-glow: rgba(255, 47, 58, 0.18);
-
-            /* Neutral Typography */
-            --text-pure-white: #ffffff;
-            --text-muted: #9c9c9d;
-            --text-subtle: #5f6063;
-
-            /* Keycap Button */
-            --keycap-bg: #e6e6e6;
-            --keycap-text: #2f3031;
-
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'JetBrains Mono', 'GeistMono', monospace;
+            --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--canvas-bg);
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
-            font-size: 15px;
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            border-radius: 2px !important; /* Clean modern refined edges */
         }
 
         ::selection {
-            background-color: var(--aurora-coral);
-            color: #07080a;
+            background-color: var(--gold-primary);
+            color: #000000;
         }
 
-        /* ================= LIVING WARM AURORA BACKGROUND ================= */
-        .aurora-canvas {
-            position: fixed;
-            top: -25%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-            background: #07080a;
-        }
-
-        /* Light-Blade 1: Diagonal Primary Crimson-to-Amber Core */
-        .light-blade-1 {
-            position: absolute;
-            top: 10%;
-            left: 20%;
-            width: 65vw;
-            height: 400px;
-            transform: rotate(-32deg);
-            background: linear-gradient(90deg, transparent 0%, #ff2f3a 35%, #ff6b4a 65%, #ffb347 88%, transparent 100%);
-            filter: blur(75px);
-            mix-blend-mode: screen;
-            opacity: 0.58;
-            animation: auroraDrift1 18s ease-in-out infinite alternate;
-        }
-
-        /* Light-Blade 2: Coral-Amber Upper Blade */
-        .light-blade-2 {
-            position: absolute;
-            top: 2%;
-            left: 36%;
-            width: 55vw;
-            height: 340px;
-            transform: rotate(-44deg);
-            background: linear-gradient(85deg, transparent 0%, #ff6b4a 28%, #ffb347 70%, transparent 100%);
-            filter: blur(80px);
-            mix-blend-mode: screen;
-            opacity: 0.48;
-            animation: auroraDrift2 22s ease-in-out infinite alternate;
-        }
-
-        /* Light-Blade 3: Deep Crimson Lower Flare */
-        .light-blade-3 {
-            position: absolute;
-            top: 28%;
-            left: 12%;
-            width: 72vw;
-            height: 440px;
-            transform: rotate(-24deg);
-            background: linear-gradient(100deg, transparent 0%, rgba(255, 47, 58, 0.85) 40%, rgba(255, 107, 74, 0.6) 75%, transparent 100%);
-            filter: blur(90px);
-            mix-blend-mode: screen;
-            opacity: 0.52;
-            animation: auroraDrift3 16s ease-in-out infinite alternate;
-        }
-
-        /* Light-Blade 4: Ambient Warm Center Core */
-        .light-blade-4 {
-            position: absolute;
-            top: 18%;
-            left: 45%;
-            width: 52vw;
-            height: 320px;
-            transform: rotate(-38deg);
-            background: linear-gradient(90deg, transparent 0%, #ff2f3a 45%, #ffb347 85%, transparent 100%);
-            filter: blur(75px);
-            mix-blend-mode: screen;
-            opacity: 0.42;
-            animation: auroraDrift4 20s ease-in-out infinite alternate;
-        }
-
-        /* 0% Keyframe set to FULL BLOOM for rich still rendering */
-        @keyframes auroraDrift1 {
-            0% {
-                transform: rotate(-32deg) translate(0, 0) scale(1);
-                opacity: 0.58;
-            }
-            50% {
-                transform: rotate(-29deg) translate(-35px, 25px) scale(1.08);
-                opacity: 0.50;
-            }
-            100% {
-                transform: rotate(-35deg) translate(30px, -20px) scale(0.95);
-                opacity: 0.64;
-            }
-        }
-
-        @keyframes auroraDrift2 {
-            0% {
-                transform: rotate(-44deg) translate(0, 0) scale(1);
-                opacity: 0.48;
-            }
-            50% {
-                transform: rotate(-40deg) translate(45px, -25px) scale(0.93);
-                opacity: 0.58;
-            }
-            100% {
-                transform: rotate(-47deg) translate(-25px, 35px) scale(1.05);
-                opacity: 0.42;
-            }
-        }
-
-        @keyframes auroraDrift3 {
-            0% {
-                transform: rotate(-24deg) translate(0, 0) scale(1);
-                opacity: 0.52;
-            }
-            50% {
-                transform: rotate(-21deg) translate(-30px, -22px) scale(1.09);
-                opacity: 0.44;
-            }
-            100% {
-                transform: rotate(-27deg) translate(35px, 30px) scale(0.94);
-                opacity: 0.60;
-            }
-        }
-
-        @keyframes auroraDrift4 {
-            0% {
-                transform: rotate(-38deg) translate(0, 0) scale(1);
-                opacity: 0.42;
-            }
-            50% {
-                transform: rotate(-34deg) translate(25px, 18px) scale(1.06);
-                opacity: 0.54;
-            }
-            100% {
-                transform: rotate(-41deg) translate(-40px, -30px) scale(0.94);
-                opacity: 0.38;
-            }
-        }
-
-        /* Film-Grain Overlay */
-        .film-grain-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            filter: url(#film-grain);
-            opacity: 0.055;
-        }
-
-        /* Vignette Overlay */
-        .vignette-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 2;
-            background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(7, 8, 10, 0.85) 100%);
-        }
-
-        /* Main Workspace Container */
-        .workspace-shell {
+        body {
+            background-color: var(--bg-obsidian);
+            color: var(--fg-cream);
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
-            z-index: 10;
-            max-width: 1440px;
+            background-image: 
+                radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.02) 0, rgba(212, 175, 55, 0.02) 1px, transparent 0, transparent 24px),
+                repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.02) 0, rgba(212, 175, 55, 0.02) 1px, transparent 0, transparent 24px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Architectural Main Shell */
+        .art-deco-wrapper {
+            max-width: 1360px;
             margin: 0 auto;
-            padding: 24px 24px 80px;
+            padding: 24px 20px 60px;
         }
 
-        /* ================= FLOATING PILL NAV ================= */
-        .nav-wrapper {
-            position: sticky;
-            top: 18px;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 56px;
+        /* ================= DECORATIVE CORNER L-BRACKETS ================= */
+        .deco-frame {
+            position: relative;
+            background: var(--bg-charcoal);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
         }
 
-        .floating-pill-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 980px;
-            background: rgba(13, 15, 20, 0.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 9999px;
-            padding: 8px 10px 8px 18px;
-            box-shadow: 
-                0 12px 36px rgba(0, 0, 0, 0.55),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            transition: border-color 0.2s ease;
+        .deco-frame:hover {
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
         }
 
-        .floating-pill-nav:hover {
-            border-color: rgba(255, 255, 255, 0.14);
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .warm-diamond-glyph {
+        /* Corner Embellishments */
+        .corner-bracket {
+            position: absolute;
             width: 12px;
             height: 12px;
-            background: linear-gradient(135deg, var(--aurora-amber), var(--aurora-crimson));
-            transform: rotate(45deg);
-            box-shadow: 0 0 10px var(--aurora-coral);
-            border-radius: 2px;
+            border-color: var(--gold-primary);
+            pointer-events: none;
+            transition: all 0.3s ease;
         }
+        .cb-tl { top: -2px; left: -2px; border-top: 2px solid var(--gold-primary); border-left: 2px solid var(--gold-primary); }
+        .cb-tr { top: -2px; right: -2px; border-top: 2px solid var(--gold-primary); border-right: 2px solid var(--gold-primary); }
+        .cb-bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--gold-primary); border-left: 2px solid var(--gold-primary); }
+        .cb-br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--gold-primary); border-right: 2px solid var(--gold-primary); }
 
-        .nav-wordmark {
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-pure-white);
-            letter-spacing: -0.01em;
-        }
-
-        .nav-wordmark span {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .nav-link {
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--text-pure-white);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .nav-status-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-
-        .status-dot-warm {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--aurora-coral);
-            box-shadow: 0 0 8px var(--aurora-coral);
-            animation: pulseWarm 2s infinite;
-        }
-
-        @keyframes pulseWarm {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.85); }
-        }
-
-        .nav-download-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--keycap-bg);
-            color: var(--keycap-text);
-            font-family: var(--font-sans);
-            font-size: 13px;
-            font-weight: 600;
-            padding: 7px 15px;
-            border-radius: 9999px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 
-                0 0 0 1px #07080a,
-                0 0 10px rgba(255, 255, 255, 0.18),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            transition: all 0.15s ease;
-        }
-
-        .nav-download-pill:hover {
-            background: #ffffff;
-            transform: translateY(-1px);
-        }
-
-        .nav-download-pill svg {
-            width: 13px;
-            height: 13px;
-        }
-
-        /* ================= HERO COMPONENT ================= */
-        .hero-section {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .eyebrow-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .eyebrow-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: rgba(18, 21, 29, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 9999px;
-            font-family: var(--font-sans);
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-        }
-
-        .eyebrow-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--aurora-amber);
-            box-shadow: 0 0 6px var(--aurora-amber);
-        }
-
-        /* Scoped H1 with explicit font-size !important */
-        .hero-h1 {
-            font-family: var(--font-sans) !important;
-            font-size: 64px !important;
-            font-weight: 600 !important;
-            line-height: 1.1 !important;
-            letter-spacing: -0.03em !important;
-            color: var(--text-pure-white) !important;
-            text-align: center;
-            margin: 0 auto 20px;
-            max-width: 900px;
-        }
-
-        .gradient-accent-word {
-            background: linear-gradient(135deg, var(--aurora-amber) 0%, var(--aurora-coral) 50%, var(--aurora-crimson) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .hero-subtitle {
-            font-family: var(--font-sans);
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 1.5;
-            letter-spacing: 0.2px;
-            color: var(--text-muted);
-            text-align: center;
-            max-width: 640px;
-            margin: 0 auto 32px;
-        }
-
-        /* Tactile Keycap Raised Download Button Row */
-        .keycap-buttons-row {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 14px;
-        }
-
-        .keycap-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--keycap-bg);
-            color: var(--keycap-text);
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            padding: 12px 22px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 
-                0 0 0 2px #07080a,
-                0 0 16px rgba(255, 255, 255, 0.19),
-                inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.28),
-                0 6px 14px rgba(0, 0, 0, 0.55);
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-        }
-
-        .keycap-btn:hover {
-            background: #f0f0f0;
-            box-shadow: 
-                0 0 0 2px #07080a,
-                0 0 22px rgba(255, 255, 255, 0.28),
-                inset 0 1px 0 rgba(255, 255, 255, 1),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.25),
-                0 8px 18px rgba(0, 0, 0, 0.65);
-            transform: translateY(-1px);
-        }
-
-        .keycap-btn:active {
-            transform: translateY(1px);
-            box-shadow: 
-                0 0 0 2px #07080a,
-                inset 0 2px 3px rgba(0, 0, 0, 0.35),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .keycap-icon {
-            width: 16px;
-            height: 16px;
-        }
-
-        .install-caption-mono {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .install-caption-mono code {
-            color: var(--text-pure-white);
-            background: rgba(255, 255, 255, 0.08);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        /* ================= DARK-GLASS COMMAND-BAR / LAUNCHER ================= */
-        .command-bar-wrapper {
-            max-width: 800px;
-            margin: 0 auto 28px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .command-bar-mockup {
-            background: rgba(14, 16, 22, 0.78);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 14px;
-            box-shadow: 
-                0 24px 64px rgba(0, 0, 0, 0.85),
-                0 0 35px var(--aurora-warm-glow),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .command-bar-mockup:hover {
-            border-color: rgba(255, 255, 255, 0.14);
-            box-shadow: 
-                0 28px 72px rgba(0, 0, 0, 0.9),
-                0 0 42px rgba(255, 47, 58, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.14);
-        }
-
-        .cmd-input-row {
-            display: flex;
-            align-items: center;
-            padding: 15px 18px;
-            border-bottom: 1px solid var(--hairline-border);
-            gap: 12px;
-        }
-
-        .cmd-search-icon {
-            width: 18px;
-            height: 18px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .cmd-query-wrap {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-
-        .cmd-query-text {
-            font-family: var(--font-sans);
-            font-size: 15px;
-            color: var(--text-pure-white);
-            font-weight: 400;
-        }
-
-        .cmd-blinking-caret {
-            display: inline-block;
-            width: 2px;
-            height: 18px;
-            background: var(--aurora-coral);
-            margin-left: 2px;
-            animation: caretBlink 1s infinite;
-        }
-
-        @keyframes caretBlink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        .cmd-mode-pill {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--aurora-amber);
-            background: rgba(255, 179, 71, 0.12);
-            border: 1px solid rgba(255, 179, 71, 0.25);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        .cmd-results-list {
-            padding: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .cmd-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .cmd-row:hover {
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        /* Active warm aurora state (Strictly warm, never purple) */
-        .cmd-row.active-warm {
-            background: rgba(255, 47, 58, 0.1);
-            border: 1px solid rgba(255, 47, 58, 0.3);
-            box-shadow: 0 0 16px rgba(255, 47, 58, 0.12);
-        }
-
-        .cmd-row-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            overflow: hidden;
-        }
-
-        .cmd-row-icon {
-            width: 16px;
-            height: 16px;
-            color: var(--aurora-coral);
-            flex-shrink: 0;
-        }
-
-        .cmd-row-label {
-            font-family: var(--font-sans);
-            font-size: 14px;
-            color: var(--text-pure-white);
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .cmd-mono-arg {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-
-        .cmd-shortcut-chip {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2px 7px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .cmd-row.active-warm .cmd-shortcut-chip {
-            color: var(--aurora-amber);
-            border-color: rgba(255, 179, 71, 0.3);
-            background: rgba(255, 179, 71, 0.1);
-        }
-
-        .cmd-footer-strip {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
-            background: rgba(8, 10, 14, 0.65);
-            border-top: 1px solid var(--hairline-border);
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .cmd-hints-group {
-            display: flex;
-            gap: 14px;
-        }
-
-        .cmd-hint {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .cmd-key {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 1px 5px;
-            border-radius: 3px;
-            color: var(--text-pure-white);
-        }
-
-        .cmd-footer-brand {
-            color: var(--text-subtle);
-        }
-
-        /* Ghost Pill Link (Centered beneath command bar) */
-        .ghost-pill-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 64px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .ghost-pill-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        /* Double-frame container helper */
+        .double-border-box {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 4px;
             background: transparent;
-            color: var(--text-muted);
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            border: 1px solid var(--hairline-border);
-            border-radius: 9999px;
-            padding: 8px 18px;
-            transition: all 0.2s ease;
         }
-
-        .ghost-pill-btn:hover {
-            color: var(--text-pure-white);
-            border-color: rgba(255, 107, 74, 0.4);
-            background: rgba(255, 47, 58, 0.06);
-            box-shadow: 0 0 15px rgba(255, 47, 58, 0.15);
-        }
-
-        .ghost-pill-arrow {
-            width: 14px;
-            height: 14px;
-            transition: transform 0.2s ease;
-        }
-
-        .ghost-pill-btn:hover .ghost-pill-arrow {
-            transform: translateX(3px);
-        }
-
-        /* Floating Product Hunt Badge Card (Bottom Right) */
-        .floating-product-hunt-badge {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 99;
-        }
-
-        .ph-badge-inner {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(14, 16, 22, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 10px;
-            padding: 8px 14px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--aurora-warm-glow);
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .ph-badge-inner:hover {
-            border-color: rgba(255, 107, 74, 0.4);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 47, 58, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .ph-logo-circle {
-            width: 28px;
-            height: 28px;
-            flex-shrink: 0;
-        }
-
-        .ph-icon {
-            width: 100%;
+        .double-border-inner {
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 20px;
+            background: var(--bg-charcoal);
             height: 100%;
         }
 
-        .ph-badge-text {
+        /* Rotated Diamond Motif */
+        .diamond-badge {
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--gold-primary);
+            transform: rotate(45deg);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-obsidian);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+            flex-shrink: 0;
+        }
+        .diamond-content {
+            transform: rotate(-45deg);
+            font-family: var(--font-display);
+            font-size: 13px;
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        /* Decorative Horizontal Divider with Sunburst Wing lines */
+        .deco-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 12px 0 20px;
+        }
+        .deco-line {
+            height: 1px;
+            width: 70px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary));
+        }
+        .deco-line.rev {
+            background: linear-gradient(90deg, var(--gold-primary), transparent);
+        }
+        .deco-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold-primary);
+            transform: rotate(45deg);
+        }
+
+        /* ================= MINIMAL REFINED ART DECO HEADER ================= */
+        header.art-deco-header {
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            background: var(--bg-charcoal);
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.9), 0 0 15px rgba(212, 175, 55, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .header-brand-axis {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* MINIMAL TITLE (USER EXPLICIT REQUIREMENT) */
+        .title-group {
             display: flex;
             flex-direction: column;
         }
 
-        .ph-badge-title {
-            font-family: var(--font-mono);
-            font-size: 9px;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
+        .minimal-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            letter-spacing: -0.01em;
+            color: var(--fg-cream);
             font-weight: 600;
+            line-height: 1.2;
         }
 
-        .ph-badge-rank {
-            font-family: var(--font-sans);
+        .minimal-title span {
+            color: var(--gold-primary);
+        }
+
+        .minimal-subtitle {
+            font-family: var(--font-body);
             font-size: 12px;
-            color: var(--text-pure-white);
-            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--fg-muted);
+            margin-top: 2px;
         }
 
-        /* ================= TOAST NOTIFICATION ================= */
-        .alert-toast {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            background: rgba(18, 21, 29, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--aurora-coral);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--aurora-warm-glow);
-            padding: 12px 20px;
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
-            font-size: 13px;
-            border-radius: 8px;
-            display: none;
-            z-index: 1000;
-            animation: toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes toastSlide {
-            from { opacity: 0; transform: translateY(-12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ================= WORKSTATION APPLICATION CORE ================= */
-        .section-header-wrap {
-            margin-bottom: 28px;
-            text-align: left;
-        }
-
-        .section-eyebrow {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--aurora-coral);
-            margin-bottom: 4px;
-        }
-
-        .section-heading-title {
-            font-family: var(--font-sans);
-            font-size: 26px;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            color: var(--text-pure-white);
-        }
-
-        .section-heading-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Patient Demographics Intake Card */
-        .patient-intake-card {
-            background: var(--surface-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-            transition: border-color 0.2s ease;
-        }
-
-        .patient-intake-card:hover {
-            border-color: var(--hairline-border-hover);
-        }
-
-        .intake-header-row {
+        .header-telemetry-axis {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--hairline-border);
-            padding-bottom: 14px;
-            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .intake-title {
-            font-family: var(--font-sans);
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-pure-white);
+        .deco-pill {
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: rgba(10, 10, 10, 0.7);
+            padding: 6px 14px;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: normal;
+            color: var(--fg-cream);
         }
 
-        .intake-tag {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2px 8px;
-            border-radius: 4px;
+        .deco-pill b {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        .status-glow-diamond {
+            width: 6px;
+            height: 6px;
+            background: var(--gold-primary);
+            transform: rotate(45deg);
+            box-shadow: 0 0 8px var(--gold-primary);
+        }
+
+        /* ================= ALERT TOAST NOTIFICATION ================= */
+        .alert-toast {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            background: var(--bg-charcoal);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-light);
+            padding: 12px 22px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: normal;
+            z-index: 99999999;
+            display: none;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+            animation: fadeInDeco 0.3s ease;
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn-gold-primary {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: normal;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #F2E8C4 0%, #D4AF37 50%, #997A15 100%);
+            color: #0A0A0A;
+            border: 1px solid #D4AF37;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+            text-decoration: none;
+        }
+
+        .btn-gold-primary:hover {
+            background: #F2E8C4;
+            color: #000;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold-outline {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: normal;
+            padding: 10px 22px;
+            background: transparent;
+            color: var(--gold-light);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-gold-outline:hover {
+            background: rgba(212, 175, 55, 0.12);
+            border-color: var(--gold-primary);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* ================= PAGE 1: INTAKE & UPLOAD ================= */
+        #page-upload { display: block; }
+
+        /* Section Ornament Header */
+        .section-ornament-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .section-tagline {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            text-transform: uppercase;
+            color: var(--gold-primary);
+            margin-bottom: 4px;
+        }
+
+        .section-title-deco {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--fg-cream);
+        }
+
+        /* Patient Intake Form with Underlined Elegance */
+        .patient-intake-section {
+            padding: 24px 28px;
+            margin-bottom: 32px;
         }
 
         .intake-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 22px;
+            margin-top: 10px;
         }
 
         .intake-field {
@@ -915,89 +345,87 @@
         }
 
         .intake-field label {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: normal;
+            color: var(--gold-primary);
         }
 
-        .intake-field input, .intake-field select {
-            background: rgba(7, 8, 10, 0.7);
-            border: 1px solid var(--hairline-border);
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
-            font-size: 13px;
-            padding: 9px 12px;
-            border-radius: 6px;
+        .intake-field input,
+        .intake-field select {
+            width: 100%;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--fg-cream);
+            font-family: var(--font-body);
+            font-size: 14px;
+            letter-spacing: normal;
+            padding: 6px 0;
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .intake-field input:focus, .intake-field select:focus {
-            border-color: var(--aurora-coral);
-            box-shadow: 0 0 12px var(--aurora-warm-glow);
+        .intake-field input:focus,
+        .intake-field select:focus {
+            border-bottom-color: var(--gold-primary);
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+            color: var(--gold-light);
         }
 
-        /* Protocol Grid (Single Scan vs 4-Channel Quad) */
-        .protocols-grid {
+        .intake-field select option {
+            background: #141414;
+            color: #F2F0E4;
+        }
+
+        /* 2-Column Symmetrical Protocol Exhibition */
+        .protocol-gallery-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 40px;
+            gap: 28px;
+            margin-bottom: 32px;
         }
 
         .protocol-card {
-            background: var(--surface-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--hairline-border);
-            border-radius: 14px;
-            padding: 26px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-            transition: all 0.25s ease;
         }
 
-        .protocol-card:hover {
-            border-color: rgba(255, 255, 255, 0.16);
-            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65), 0 0 25px rgba(255, 47, 58, 0.08);
-            transform: translateY(-2px);
+        .protocol-header {
+            margin-bottom: 20px;
         }
 
-        .protocol-badge {
-            display: inline-flex;
+        .protocol-roman-tag {
+            display: flex;
             align-items: center;
-            gap: 6px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--aurora-amber);
+            gap: 10px;
             margin-bottom: 10px;
         }
 
         .protocol-title {
-            font-family: var(--font-sans);
-            font-size: 20px;
+            font-family: var(--font-display);
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text-pure-white);
-            margin-bottom: 8px;
             letter-spacing: -0.01em;
+            color: var(--gold-light);
+            margin-bottom: 6px;
         }
 
         .protocol-desc {
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--fg-muted);
             line-height: 1.5;
-            margin-bottom: 20px;
         }
 
-        /* Dropzone Styling */
-        .developer-dropzone {
-            border: 1px dashed rgba(255, 255, 255, 0.18);
-            background: rgba(7, 8, 10, 0.6);
-            border-radius: 8px;
-            padding: 32px 20px;
+        /* DROPZONES */
+        .deco-dropzone {
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            background: rgba(10, 10, 10, 0.6);
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1005,59 +433,55 @@
             text-align: center;
             cursor: pointer;
             margin-bottom: 20px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             min-height: 170px;
         }
 
-        .developer-dropzone:hover {
-            border-color: var(--aurora-coral);
-            background: rgba(255, 47, 58, 0.04);
-            box-shadow: 0 0 20px var(--aurora-warm-glow);
-        }
-
-        .dropzone-icon {
-            width: 28px;
-            height: 28px;
-            color: var(--aurora-coral);
-            margin-bottom: 12px;
+        .deco-dropzone:hover {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
         }
 
         .dropzone-callout {
-            font-size: 14px;
+            font-family: var(--font-display);
+            font-size: 15px;
             font-weight: 600;
-            color: var(--text-pure-white);
+            letter-spacing: normal;
+            color: var(--fg-cream);
             margin-bottom: 4px;
         }
 
-        .dropzone-sub {
+        .dropzone-instructions {
             font-size: 12px;
-            color: var(--text-muted);
+            letter-spacing: normal;
+            color: var(--fg-muted);
             margin-bottom: 12px;
         }
 
-        .pills-row {
+        .format-pills-row {
             display: flex;
             gap: 6px;
         }
 
-        .pill-tag {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            padding: 2px 7px;
-            border: 1px solid var(--hairline-border);
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 4px;
+        .format-pill {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: var(--gold-primary);
+            background: rgba(0,0,0,0.5);
         }
 
-        .selected-file-badge {
-            font-family: var(--font-mono);
+        .card-file-name {
+            font-family: var(--font-body);
             font-size: 12px;
-            color: var(--aurora-amber);
-            background: rgba(255, 179, 71, 0.1);
-            border: 1px solid rgba(255, 179, 71, 0.3);
+            letter-spacing: normal;
+            color: var(--gold-light);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.4);
             padding: 4px 10px;
-            border-radius: 4px;
             margin-top: 10px;
             max-width: 90%;
             overflow: hidden;
@@ -1065,18 +489,17 @@
             white-space: nowrap;
         }
 
-        /* 4-Channel Multiplex Quad */
-        .quad-channels {
+        /* 4-CHANNEL MULTIPLEX GRID */
+        .channels-quad {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 20px;
         }
 
-        .quad-channel-pod {
-            border: 1px solid var(--hairline-border);
-            background: rgba(7, 8, 10, 0.6);
-            border-radius: 8px;
+        .channel-pod {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(10, 10, 10, 0.6);
             padding: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -1086,999 +509,851 @@
             min-height: 80px;
         }
 
-        .quad-channel-pod:hover {
-            border-color: var(--aurora-coral);
-            background: rgba(255, 47, 58, 0.05);
-            box-shadow: 0 0 14px var(--aurora-warm-glow);
+        .channel-pod:hover {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
         }
 
-        .channel-top-meta {
+        .channel-pod-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .channel-code {
-            font-family: var(--font-sans);
+        .channel-name-tag {
+            font-family: var(--font-body);
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-pure-white);
+            letter-spacing: normal;
+            color: var(--gold-primary);
         }
 
-        .channel-subtag {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--aurora-coral);
-        }
-
-        .channel-filename-txt {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
+        .channel-fname {
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: normal;
+            color: var(--fg-muted);
             margin-top: 6px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        /* Action Buttons */
-        .btn-aurora-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: linear-gradient(135deg, var(--aurora-coral), var(--aurora-crimson));
-            color: #ffffff;
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 600;
-            padding: 13px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 18px rgba(255, 47, 58, 0.35);
-            transition: all 0.2s ease;
-        }
-
-        .btn-aurora-action:hover {
-            background: linear-gradient(135deg, #ff7c5e, #ff3d48);
-            box-shadow: 0 6px 24px rgba(255, 47, 58, 0.5);
-            transform: translateY(-1px);
-        }
-
-        .btn-ghost-outline {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: transparent;
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
-            font-size: 13px;
-            font-weight: 500;
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: 1px solid var(--hairline-border);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-        }
-
-        .btn-ghost-outline:hover {
-            border-color: rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .hidden-input {
-            display: none;
-        }
+        .hidden-input { display: none; }
 
         /* ================= PAGE 2: PIPELINE EXECUTION ================= */
-        #page-pipeline {
-            display: none;
-        }
+        #page-pipeline { display: none; }
 
-        .pipeline-top-bar {
+        .pipeline-nav-bar {
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: var(--bg-charcoal);
+            padding: 12px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 16px 20px;
+            align-items: center;
             margin-bottom: 24px;
         }
 
-        .pipeline-grid-split {
+        .pipeline-workspace-split {
             display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 24px;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+            align-items: start;
         }
 
-        .dossier-card {
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
+        /* Patient Dossier Left */
+        .patient-dossier-frame {
             padding: 22px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-            height: fit-content;
         }
 
-        .dossier-title {
-            font-family: var(--font-sans);
+        .dossier-header-title {
+            font-family: var(--font-display);
             font-size: 15px;
             font-weight: 600;
-            color: var(--text-pure-white);
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--hairline-border);
-            padding-bottom: 10px;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 14px;
+        }
+
+        .dossier-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
         }
 
         .dossier-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 12px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         }
 
         .dossier-row span {
-            color: var(--text-muted);
+            color: var(--fg-muted);
+            letter-spacing: normal;
         }
 
         .dossier-row b {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--text-pure-white);
+            font-family: var(--font-body);
+            font-weight: 500;
+            color: var(--fg-cream);
         }
 
-        .dossier-preview-box {
-            margin-top: 18px;
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
-            background: rgba(7, 8, 10, 0.8);
-            overflow: hidden;
+        .viewport-frame {
+            border: 1px solid var(--gold-primary);
+            background: #000;
             position: relative;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
         }
 
-        .dossier-preview-tag {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--aurora-amber);
-            background: rgba(0, 0, 0, 0.75);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .dossier-preview-box img {
+        .viewport-frame img {
             width: 100%;
-            height: 220px;
+            height: 100%;
             object-fit: contain;
-            display: block;
         }
 
-        /* 7-Stage Stepper Panel */
-        .stepper-panel {
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        .viewport-tag {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--gold-primary);
+            padding: 2px 6px;
         }
 
-        .stepper-top-meta {
+        /* Stepper Panel Right */
+        .stepper-stage-panel {
+            padding: 26px;
+        }
+
+        .stepper-title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .stepper-header-h {
-            font-family: var(--font-sans);
-            font-size: 16px;
+        .stepper-heading {
+            font-family: var(--font-display);
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text-pure-white);
+            letter-spacing: -0.01em;
+            color: var(--gold-light);
         }
 
-        .stepper-progress-track {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 2px;
-            margin-bottom: 24px;
-            overflow: hidden;
-        }
-
-        .stepper-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--aurora-crimson), var(--aurora-coral), var(--aurora-amber));
-            box-shadow: 0 0 12px var(--aurora-coral);
-            transition: width 0.4s ease;
-        }
-
-        .seven-stages-grid {
+        /* 7 ROMAN NUMERAL STAGE BOXES */
+        .roman-stepper-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .step-node {
-            background: rgba(7, 8, 10, 0.6);
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
+        .stepper-rail-bg { display: none; }
+        .stepper-rail-fill {
+            height: 2px;
+            background: linear-gradient(90deg, #997A15, #D4AF37, #F2E8C4);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            margin-bottom: 18px;
+            transition: width 0.3s ease;
+        }
+
+        .step-item {
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(10, 10, 10, 0.7);
             padding: 12px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
         }
 
         .step-circle {
-            width: 28px;
-            height: 28px;
-            margin: 0 auto 6px;
-            border-radius: 50%;
-            border: 1px solid var(--hairline-border);
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-mono);
-            font-size: 11px;
+            font-family: var(--font-body);
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-muted);
-            transition: all 0.25s ease;
+            color: var(--fg-muted);
+            transition: all 0.3s ease;
         }
 
-        .step-node.active {
-            border-color: var(--aurora-coral);
-            background: rgba(255, 107, 74, 0.08);
-            box-shadow: 0 0 16px var(--aurora-warm-glow);
+        .step-item.active {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
-
-        .step-node.active .step-circle {
-            background: var(--aurora-coral);
-            color: #07080a;
-            border-color: var(--aurora-coral);
-            box-shadow: 0 0 12px var(--aurora-coral);
-        }
-
-        .step-node.completed {
-            border-color: rgba(255, 179, 71, 0.4);
-            background: rgba(255, 179, 71, 0.05);
-        }
-
-        .step-node.completed .step-circle {
-            background: var(--aurora-amber);
-            color: #07080a;
-            border-color: var(--aurora-amber);
-        }
-
-        .step-node-name {
-            font-family: var(--font-sans);
-            font-size: 11px;
+        .step-item.active .step-circle {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-body);
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-pure-white);
-            margin-bottom: 2px;
+            color: var(--fg-muted);
+            transition: all 0.3s ease;
+        }
+        .step-item.active .step-label {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--fg-muted);
+            margin-top: 6px;
         }
 
-        .step-node-sub {
+        .step-item.completed {
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+        .step-item.completed .step-circle {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--fg-muted);
+            transition: all 0.3s ease;
+        }
+        .step-item.completed .step-label {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--fg-muted);
+            margin-top: 6px;
+        }
+
+        .step-label {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--fg-muted);
+            margin-top: 6px;
+        }
+
+        .step-desc {
             font-size: 10px;
-            color: var(--text-muted);
+            color: var(--fg-muted);
+            margin-top: 2px;
+            line-height: 1.2;
         }
 
         /* Telemetry Console Strip */
         .telemetry-strip {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(7, 8, 10, 0.85);
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(10, 10, 10, 0.8);
+            padding: 14px 18px;
+            margin-bottom: 20px;
         }
 
-        .telemetry-left {
+        .telemetry-line {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--aurora-amber);
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: normal;
+            color: var(--gold-light);
         }
 
-        .terminal-spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255, 179, 71, 0.3);
-            border-top-color: var(--aurora-amber);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .telemetry-spinner {
+            width: 12px;
+            height: 12px;
+            border: 1px solid var(--gold-primary);
+            border-top-color: transparent;
+            animation: decoSpin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes decoSpin { 100% { transform: rotate(360deg); } }
+
+        .step-progress-mini-bar {
+            width: 100%;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.15);
+            margin-top: 8px;
         }
 
-        .mini-progress-track {
-            width: 140px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .mini-progress-fill {
-            height: 100%;
+        .step-progress-mini-fill {
             width: 0%;
-            background: var(--aurora-coral);
-            transition: width 0.2s ease;
+            height: 100%;
+            background: var(--gold-primary);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+            transition: width 0.05s linear;
         }
 
-        /* All Completed Banner */
+        /* Completion Notification */
         .all-completed-banner {
             display: none;
-            background: rgba(255, 47, 58, 0.08);
-            border: 1px solid rgba(255, 47, 58, 0.3);
-            border-radius: 10px;
-            padding: 20px;
+            border: 1px solid var(--gold-primary);
+            background: rgba(212, 175, 55, 0.06);
+            padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 0 25px var(--aurora-warm-glow);
+            text-align: center;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
         }
 
-        .banner-h {
-            font-family: var(--font-sans);
-            font-size: 16px;
+        .all-completed-title {
+            font-family: var(--font-display);
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text-pure-white);
+            letter-spacing: -0.01em;
+            color: var(--gold-light);
             margin-bottom: 6px;
         }
 
-        .banner-p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
+        .all-completed-sub {
+            font-size: 12px;
+            color: var(--fg-muted);
+            margin-bottom: 18px;
         }
 
-        /* Dynamic Step Logs Stack */
-        .logs-stream-header {
+        /* 3D Verification Box */
+        #banner-3d-box {
+            margin-top: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(10, 10, 10, 0.7);
+            padding: 14px 18px;
+            text-align: left;
+        }
+
+        /* Log History */
+        .step-logs-header {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            padding-bottom: 6px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            text-transform: uppercase;
         }
 
         .step-logs-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
-        .stage-completed-card {
-            background: rgba(7, 8, 10, 0.65);
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
-            padding: 16px;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .stage-card-head {
+        .step-log-card {
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(16, 16, 16, 0.8);
+            padding: 16px 18px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            gap: 16px;
+            position: relative;
+            transition: all 0.2s ease;
         }
 
-        .stage-card-title {
-            font-family: var(--font-sans);
+        .step-log-card.latest-top {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+
+        .latest-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: normal;
+            color: var(--gold-light);
+            border: 1px solid var(--gold-primary);
+            padding: 2px 8px;
+        }
+
+        .step-log-icon {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-log-text {
+            font-family: var(--font-body);
             font-size: 14px;
             font-weight: 600;
-            color: var(--text-pure-white);
+            letter-spacing: normal;
+            color: var(--fg-cream);
         }
 
-        .stage-card-body {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .stage-card-img {
-            width: 140px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid var(--hairline-border);
-        }
-
-        .stage-card-details {
+        .step-log-sub {
             font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* ================= 3D VOLUMETRIC SUITE MODAL ================= */
-        #modal-3d {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(5, 6, 8, 0.88);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            z-index: 2000;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .modal-3d-box {
-            max-width: 1280px;
-            margin: 0 auto;
-            background: rgba(14, 16, 22, 0.95);
-            border: 1px solid var(--hairline-border);
-            border-radius: 14px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 35px var(--aurora-warm-glow);
-            overflow: hidden;
-        }
-
-        .modal-3d-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--hairline-border);
-        }
-
-        .modal-title-wrap {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-3d-h {
-            font-family: var(--font-sans);
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-pure-white);
-        }
-
-        .modal-3d-sub {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
+            color: var(--fg-muted);
             margin-top: 2px;
         }
 
-        .btn-modal-close {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--hairline-border);
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
-            font-size: 13px;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .btn-modal-close:hover {
-            background: rgba(255, 47, 58, 0.2);
-            border-color: var(--aurora-coral);
-        }
-
-        /* 3D Toolbar */
-        .modal-3d-controls {
+        .step-output-box {
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: #000;
+            padding: 10px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 18px;
-            padding: 14px 24px;
-            background: rgba(8, 10, 14, 0.65);
-            border-bottom: 1px solid var(--hairline-border);
+            gap: 14px;
         }
 
-        .ctrl-item {
+        .step-output-img-box {
+            width: 72px;
+            height: 72px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-output-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ================= PAGE 3: DOCTOR'S SUITE ================= */
+        #page-doctor-results { display: none; }
+
+        .doc-header-card {
+            padding: 24px 28px;
+            margin-bottom: 24px;
+        }
+
+        .doc-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 12px;
+        }
+
+        .doc-header-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--gold-light);
+        }
+
+        .doc-patient-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+            margin-top: 16px;
+        }
+
+        .doc-patient-item span {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+            display: block;
+        }
+
+        .doc-patient-item b {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--fg-cream);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* 4 ART DECO KPI FRAMES */
+        .kpi-grid-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+
+        .kpi-box-item {
+            padding: 20px;
+            background: var(--bg-charcoal);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-box-item:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .kpi-title-tag {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kpi-value-num {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--gold-light);
+            margin: 8px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kpi-sub-label {
+            font-size: 12px;
+            color: var(--fg-muted);
+            letter-spacing: normal;
+        }
+
+        /* Composite 8-Panel Viewer Bay */
+        .composite-viz-card {
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .composite-viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .composite-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--gold-light);
+        }
+
+        .composite-legend-pills {
+            display: flex;
+            gap: 10px;
+            font-family: var(--font-body);
+            font-size: 12px;
+        }
+
+        .legend-tag {
+            padding: 3px 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--fg-cream);
+            font-weight: 500;
+        }
+
+        .viz-viewport-frame {
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            background: #000;
+            box-shadow: 0 0 25px rgba(0,0,0,0.9);
+        }
+
+        .viz-viewport-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Action Controls */
+        .doc-action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        /* ================= 3D VOLUMETRIC MODAL ================= */
+        #modal-3d {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 5, 5, 0.95);
+            z-index: 9999999;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .modal-3d-container {
+            max-width: 1360px;
+            height: calc(100vh - 48px);
+            margin: 0 auto;
+            background: var(--bg-charcoal);
+            border: 1px solid var(--gold-primary);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+
+        .modal-3d-header {
+            padding: 16px 24px;
+            background: #0d0d0d;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title-text {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--gold-light);
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: normal;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-close-modal:hover {
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        .modal-3d-toolbar {
+            padding: 12px 24px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
-            color: var(--text-muted);
         }
 
-        .ctrl-select {
-            background: rgba(7, 8, 10, 0.8);
-            border: 1px solid var(--hairline-border);
-            color: var(--text-pure-white);
-            font-family: var(--font-sans);
+        .control-label {
+            font-family: var(--font-body);
             font-size: 12px;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+        }
+
+        .control-select {
+            background: #141414;
+            color: var(--fg-cream);
+            border: 1px solid rgba(212, 175, 55, 0.4);
             padding: 5px 10px;
-            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: normal;
             outline: none;
         }
 
-        .ctrl-select:focus {
-            border-color: var(--aurora-coral);
+        .control-select:focus {
+            border-color: var(--gold-primary);
         }
 
-        .modal-range-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
-            outline: none;
+        .modal-slider-range {
+            accent-color: var(--gold-primary);
             cursor: pointer;
         }
 
-        .modal-range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--aurora-coral);
-            box-shadow: 0 0 8px var(--aurora-coral);
-            cursor: pointer;
-        }
-
-        .modal-3d-layout {
-            display: grid;
-            grid-template-columns: 1fr 340px;
+        .modal-3d-split {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
         }
 
         .modal-3d-canvas-wrap {
-            height: 600px;
-            background: #000000;
-            position: relative;
+            flex: 2.6;
+            background: #000;
+            border-right: 1px solid rgba(212, 175, 55, 0.25);
         }
 
         .modal-3d-canvas-wrap iframe {
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        .modal-3d-sidebar {
-            padding: 20px;
-            background: rgba(10, 12, 16, 0.85);
-            border-left: 1px solid var(--hairline-border);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            overflow-y: auto;
-            max-height: 600px;
-        }
-
-        .stat-card-3d {
-            background: rgba(18, 21, 29, 0.6);
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
-            padding: 14px;
-        }
-
-        .stat-card-head {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--aurora-amber);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .stat-line-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .stat-line-item span {
-            color: var(--text-muted);
-        }
-
-        .stat-line-item b {
-            font-family: var(--font-mono);
-            color: var(--text-pure-white);
-        }
-
-        /* ================= PAGE 3: DOCTOR'S RESULTS ================= */
-        #page-doctor-results {
-            display: none;
-        }
-
-        .results-top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-        }
-
-        .audit-dossier-card {
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .audit-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--hairline-border);
-            padding-bottom: 14px;
-            margin-bottom: 18px;
-        }
-
-        .audit-p-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-        }
-
-        .meta-datum {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .meta-datum span {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .meta-datum b {
-            font-family: var(--font-sans);
-            font-size: 14px;
-            color: var(--text-pure-white);
-        }
-
-        /* 4 Primary KPI Metric Boxes */
-        .kpi-row-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .kpi-box {
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.2s ease;
-        }
-
-        .kpi-box:hover {
-            border-color: rgba(255, 107, 74, 0.4);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px var(--aurora-warm-glow);
-            transform: translateY(-2px);
-        }
-
-        .kpi-label {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--aurora-amber);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 6px;
-        }
-
-        .kpi-stat-value {
-            font-family: var(--font-sans);
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-pure-white);
-            margin-bottom: 4px;
-            letter-spacing: -0.02em;
-        }
-
-        .kpi-sub-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Large Composite Visualization Card */
-        .viz-viewport-card {
-            background: var(--surface-bg);
-            border: 1px solid var(--hairline-border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .viz-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-        }
-
-        .viz-title-wrap {
-            font-family: var(--font-sans);
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-pure-white);
-        }
-
-        .viz-img-box {
-            background: #000000;
-            border: 1px solid var(--hairline-border);
-            border-radius: 8px;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .viz-img-box img {
-            width: 100%;
-            max-height: 650px;
-            object-fit: contain;
             display: block;
         }
 
-        .results-actions-bar {
+        .modal-3d-sidebar {
+            flex: 1.4;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--bg-charcoal);
             display: flex;
+            flex-direction: column;
             gap: 14px;
-            flex-wrap: wrap;
         }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 900px) {
-            .hero-h1 { font-size: 42px !important; }
-            .protocols-grid { grid-template-columns: 1fr; }
-            .pipeline-grid-split { grid-template-columns: 1fr; }
-            .seven-stages-grid { grid-template-columns: repeat(4, 1fr); }
-            .kpi-row-grid { grid-template-columns: 1fr 1fr; }
-            .modal-3d-layout { grid-template-columns: 1fr; }
-            .nav-center { display: none; }
+        .side-stat-card {
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(10, 10, 10, 0.6);
+            padding: 14px;
         }
 
-        @media (max-width: 600px) {
-            .hero-h1 { font-size: 34px !important; }
-            .keycap-buttons-row { flex-direction: column; }
-            .seven-stages-grid { grid-template-columns: 1fr 1fr; }
-            .kpi-row-grid { grid-template-columns: 1fr; }
-            .floating-product-hunt-badge { display: none; }
+        .side-stat-title {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--gold-primary);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .side-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+        }
+
+        .side-stat-row span {
+            color: var(--fg-muted);
+        }
+
+        .side-stat-row b {
+            font-family: var(--font-body);
+            color: var(--fg-cream);
+            font-weight: 500;
+        }
+
+        @keyframes fadeInDeco {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .intake-grid { grid-template-columns: repeat(3, 1fr); }
+            .protocol-gallery-grid { grid-template-columns: 1fr; }
+            .pipeline-workspace-split { grid-template-columns: 1fr; }
+            .roman-stepper-grid { grid-template-columns: repeat(4, 1fr); }
+            .kpi-grid-row { grid-template-columns: repeat(2, 1fr); }
+            .doc-patient-bar { grid-template-columns: repeat(3, 1fr); }
+            .modal-3d-split { flex-direction: column; }
+        }
+
+        @media (max-width: 680px) {
+            header.art-deco-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .intake-grid { grid-template-columns: 1fr; }
+            .roman-stepper-grid { grid-template-columns: 1fr 1fr; }
+            .kpi-grid-row { grid-template-columns: 1fr; }
+            .doc-patient-bar { grid-template-columns: 1fr; }
+            .channels-quad { grid-template-columns: 1fr; }
+            .doc-action-bar { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <!-- SVG Filter for feTurbulence Film-Grain Overlay -->
-    <svg style="position:fixed; top:0; left:0; width:0; height:0; pointer-events:none;">
-        <filter id="film-grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
-            <feColorMatrix type="saturate" values="0"/>
-        </filter>
-    </svg>
-
-    <!-- Living Animated Warm Aurora Light-Blades (Strictly Warm, Pure CSS) -->
-    <div class="aurora-canvas">
-        <div class="light-blade-1"></div>
-        <div class="light-blade-2"></div>
-        <div class="light-blade-3"></div>
-        <div class="light-blade-4"></div>
-    </div>
-
-    <!-- Film Grain & Vignette Overlays -->
-    <div class="film-grain-overlay"></div>
-    <div class="vignette-overlay"></div>
-
-    <div class="workspace-shell">
+    <div class="art-deco-wrapper">
         <!-- Toast Notification Alert -->
         <div id="toast-msg" class="alert-toast">
-            <span>[ SYSTEM NOTICE ]</span> &bull; <span id="toast-text-msg">Please select an MRI scan file first.</span>
+            <span>Notification</span> &bull; <span id="toast-text-msg">Please select an MRI scan file first.</span>
         </div>
 
-        <!-- ================= (1) FLOATING PILL NAV ================= -->
-        <div class="nav-wrapper">
-            <nav class="floating-pill-nav">
-                <a href="javascript:void(0)" class="nav-left" onclick="navigateTo('page-upload')">
-                    <div class="warm-diamond-glyph"></div>
-                    <div class="nav-wordmark">Basalt <span>• HQU-MSANet</span></div>
-                </a>
+        <!-- Refined Minimal Art Deco Workstation Header -->
+        <header class="art-deco-header deco-frame">
+            <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-tr"></div>
+            <div class="corner-bracket cb-bl"></div>
+            <div class="corner-bracket cb-br"></div>
 
-                <div class="nav-center">
-                    <a href="#patient-intake-anchor" class="nav-link active" onclick="navigateTo('page-upload')">Workstation</a>
-                    <a href="javascript:void(0)" class="nav-link" onclick="navigateTo('page-pipeline')">Pipeline</a>
-                    <a href="javascript:void(0)" class="nav-link" onclick="open3DModal()">Volumetric 3D</a>
-                    <a href="javascript:void(0)" class="nav-link" onclick="showToast('Documentation: BraTS Multi-Parametric MRI Calibration v2.4')">Docs</a>
-                    <a href="javascript:void(0)" class="nav-link" onclick="showToast('Changelog: Hybrid Quantum PQC simulator & real-time 3D Feret calipers')">Changelog</a>
+            <div class="header-brand-axis">
+                <div class="diamond-badge">
+                    <span class="diamond-content">Q</span>
                 </div>
-
-                <div class="nav-right">
-                    <div class="nav-status-pill">
-                        <div class="status-dot-warm"></div>
-                        <span id="gpu-tag-text">CUDA 12.1 ONLINE</span>
-                    </div>
-                    <button class="nav-download-pill" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.85-.9.04-2.02.6-2.66 1.35-.57.66-.99 1.74-.86 2.76 1.02.08 2-.54 2.6-1.26z"/>
-                        </svg>
-                        <span>Download</span>
-                    </button>
-                </div>
-            </nav>
-        </div>
-
-        <!-- ================= HERO SECTION ================= -->
-        <div class="hero-section">
-            <!-- (2) Eyebrow Chip -->
-            <div class="eyebrow-container">
-                <div class="eyebrow-chip">
-                    <span class="eyebrow-dot"></span>
-                    <span>v2.0 — now with an AI command bar</span>
+                <div class="title-group">
+                    <div class="minimal-title">HQU &bull; <span>MSANET</span></div>
+                    <div class="minimal-subtitle">Quantum Neuro-Radiology &bull; Volumetric Suite</div>
                 </div>
             </div>
 
-            <!-- (3) Two-Line H1 with ONE Warm Gradient Word -->
-            <h1 class="hero-h1">
-                Everything you build,<br>one <span class="gradient-accent-word">keystroke</span> away.
-            </h1>
-
-            <!-- (4) 18px Muted-White Subtitle -->
-            <p class="hero-subtitle">
-                Instant multi-modal neuro-radiology segmentation, 4-qubit quantum feature enhancement, and epistemic uncertainty quantification powered by HQU-MSANet.
-            </p>
-
-            <!-- (5) Row of Tactile Keycap-Raised Download Buttons -->
-            <div class="keycap-buttons-row">
-                <button class="keycap-btn" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                    <svg class="keycap-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.85-.9.04-2.02.6-2.66 1.35-.57.66-.99 1.74-.86 2.76 1.02.08 2-.54 2.6-1.26z"/>
-                    </svg>
-                    <span>Download for Mac</span>
-                </button>
-                <button class="keycap-btn" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                    <svg class="keycap-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.802"/>
-                    </svg>
-                    <span>Download for Windows</span>
-                </button>
-            </div>
-
-            <!-- (6) GeistMono Install Caption -->
-            <div class="install-caption-mono">
-                <code>brew install basalt</code> — Install via homebrew or winget
-            </div>
-
-            <!-- (7) Dark-Glass Command-Bar / Launcher Mockup -->
-            <div class="command-bar-wrapper">
-                <div class="command-bar-mockup">
-                    <div class="cmd-input-row">
-                        <svg class="cmd-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <div class="cmd-query-wrap">
-                            <span class="cmd-query-text">deploy staging</span>
-                            <span class="cmd-blinking-caret"></span>
-                        </div>
-                        <div class="cmd-mode-pill">Command</div>
-                    </div>
-
-                    <div class="cmd-results-list">
-                        <!-- Row 1: Active Warm Aurora State (Strictly warm, never purple) -->
-                        <div class="cmd-row active-warm" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                            <div class="cmd-row-left">
-                                <svg class="cmd-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                </svg>
-                                <span class="cmd-row-label">Deploy BraTS 4-channel staging pipeline</span>
-                                <span class="cmd-mono-arg">pnpm build && ./deploy</span>
-                            </div>
-                            <div class="cmd-shortcut-chip">⌘ Enter</div>
-                        </div>
-
-                        <!-- Row 2 -->
-                        <div class="cmd-row" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                            <div class="cmd-row-left">
-                                <svg class="cmd-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                                <span class="cmd-row-label">Quick Single-Sequence MRI Screening</span>
-                                <span class="cmd-mono-arg">~/scans/t1ce_raw.nii</span>
-                            </div>
-                            <div class="cmd-shortcut-chip">⌘ B</div>
-                        </div>
-
-                        <!-- Row 3 -->
-                        <div class="cmd-row" onclick="open3DModal()">
-                            <div class="cmd-row-left">
-                                <svg class="cmd-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                    <polyline points="2 17 12 22 22 17"></polyline>
-                                    <polyline points="2 12 12 17 22 12"></polyline>
-                                </svg>
-                                <span class="cmd-row-label">Launch 3D Volumetric Brain & Cranium Suite</span>
-                                <span class="cmd-mono-arg">--depth 18.0mm</span>
-                            </div>
-                            <div class="cmd-shortcut-chip">⌘ O</div>
-                        </div>
-
-                        <!-- Row 4 -->
-                        <div class="cmd-row" onclick="showToast('Monte Carlo epistemic variance calibration configured for 10 stochastic forward passes.')">
-                            <div class="cmd-row-left">
-                                <svg class="cmd-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                                </svg>
-                                <span class="cmd-row-label">Calibrate Quantum Epistemic Uncertainty</span>
-                                <span class="cmd-mono-arg">T=10 MC Passes</span>
-                            </div>
-                            <div class="cmd-shortcut-chip">⌘ K</div>
-                        </div>
-                    </div>
-
-                    <div class="cmd-footer-strip">
-                        <div class="cmd-hints-group">
-                            <span class="cmd-hint"><span class="cmd-key">↑↓</span> navigate</span>
-                            <span class="cmd-hint"><span class="cmd-key">↵</span> execute</span>
-                            <span class="cmd-hint"><span class="cmd-key">esc</span> dismiss</span>
-                        </div>
-                        <div class="cmd-footer-brand">Basalt Engine • v2.0</div>
-                    </div>
+            <div class="header-telemetry-axis">
+                <div class="deco-pill">
+                    <div class="status-glow-diamond"></div>
+                    <span id="gpu-tag-text">CUDA 12.1 ONLINE</span>
+                </div>
+                <div class="deco-pill">
+                    <span>Validation Dice:</span> <b>95.88%</b>
+                </div>
+                <div class="deco-pill">
+                    <span>Protocol:</span> <b>BraTS MP-MRI</b>
                 </div>
             </div>
+        </header>
 
-            <!-- (9) Single Centered Ghost Pill -->
-            <div class="ghost-pill-container">
-                <a href="#patient-intake-anchor" class="ghost-pill-btn" onclick="document.getElementById('patient-intake-anchor').scrollIntoView({behavior:'smooth'})">
-                    <span>Explore Workstation & Protocol</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ghost-pill-arrow">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-        <!-- ================= (8) FLOATING PRODUCT HUNT BADGE ================= -->
-        <div class="floating-product-hunt-badge" onclick="showToast('Ranked #1 Product of the Day on Product Hunt')">
-            <div class="ph-badge-inner">
-                <div class="ph-logo-circle">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="ph-icon">
-                        <circle cx="12" cy="12" r="10" fill="#ff6b4a"/>
-                        <path d="M10 7.5h3.2a2.3 2.3 0 0 1 0 4.6H10v4.4H8V7.5h2zm0 3h3.1a1 1 0 0 0 0-2H10v2z" fill="#ffffff"/>
-                    </svg>
-                </div>
-                <div class="ph-badge-text">
-                    <span class="ph-badge-title">FEATURED ON PRODUCT HUNT</span>
-                    <span class="ph-badge-rank">#1 Product of the Day</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= PAGE 1: INTAKE & SCAN PROTOCOLS ================= -->
+        <!-- ================= PAGE 1: INTAKE & UPLOAD ================= -->
         <div id="page-upload">
-            <div id="patient-intake-anchor"></div>
+            <!-- Patient Demographics Exhibition -->
+            <div class="patient-intake-section deco-frame">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
 
-            <!-- Patient Demographics Section -->
-            <div class="patient-intake-card">
-                <div class="intake-header-row">
-                    <div class="intake-title">
-                        <span>Patient Case Demographics & Registration</span>
-                    </div>
-                    <span class="intake-tag">HOSPITAL PACS RECORD</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.25); padding-bottom:8px;">
+                    <span style="font-family:var(--font-display); font-size:14px; letter-spacing:normal; color:var(--gold-light);">
+                        Case Demographics & Registration
+                    </span>
+                    <span style="font-size:11px; letter-spacing:normal; color:var(--fg-muted);">
+                        Hospital PACS Record
+                    </span>
                 </div>
 
                 <div class="intake-grid">
@@ -2109,93 +1384,108 @@
                 </div>
             </div>
 
-            <!-- Section Head -->
-            <div class="section-header-wrap">
-                <div class="section-eyebrow">Clinical Acquisition Protocol</div>
-                <h2 class="section-heading-title">Select Acquisition Mode</h2>
-                <p class="section-heading-desc">Select between rapid single-contrast screening or comprehensive 4-channel co-registered volumetric analysis.</p>
+            <!-- Section Lead (Minimal, Not Oversized) -->
+            <div class="section-ornament-header">
+                <div class="section-tagline">Clinical Acquisition Protocol</div>
+                <div class="section-title-deco">Select Scan Sequence Mode</div>
+                <div class="deco-divider">
+                    <div class="deco-line"></div>
+                    <div class="deco-dot"></div>
+                    <div class="deco-line rev"></div>
+                </div>
             </div>
 
-            <!-- Dual Protocol Cards -->
-            <div class="protocols-grid">
-                <!-- Protocol 1: Single Scan -->
-                <div class="protocol-card">
-                    <div>
-                        <div class="protocol-badge">
-                            <span>MODE I</span> &bull; <span>RAPID SCREENING</span>
-                        </div>
-                        <h3 class="protocol-title">Single-Sequence MRI Scan</h3>
-                        <p class="protocol-desc">Direct upload of individual contrast-enhanced or native volume for rapid lesion delineation and epistemic uncertainty quantification.</p>
+            <!-- 2-COLUMN PROTOCOL EXHIBITION -->
+            <div class="protocol-gallery-grid">
+                <!-- Protocol I: Single Scan -->
+                <div class="protocol-card deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
 
-                        <div class="developer-dropzone" onclick="document.getElementById('file-single').click()">
-                            <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                            <div class="dropzone-callout">Select MRI Scan File</div>
-                            <div class="dropzone-sub">Click or drag NIfTI / DICOM / PNG</div>
-                            <div class="pills-row">
-                                <span class="pill-tag">.NII</span>
-                                <span class="pill-tag">.NII.GZ</span>
-                                <span class="pill-tag">.DCM</span>
-                                <span class="pill-tag">.PNG</span>
+                    <div>
+                        <div class="protocol-header">
+                            <div class="protocol-roman-tag">
+                                <div class="diamond-badge" style="width:20px; height:20px;">
+                                    <span class="diamond-content" style="font-size:10px;">1</span>
+                                </div>
+                                <span style="font-family:var(--font-body); font-size:11px; letter-spacing:normal; color:var(--gold-primary);">Rapid Screening Mode</span>
                             </div>
-                            <div class="selected-file-badge" id="fname-single"></div>
+                            <h2 class="protocol-title">Single Sequence MRI Scan</h2>
+                            <p class="protocol-desc">Direct upload of individual contrast-enhanced or native volume for rapid lesion delineation and epistemic uncertainty quantification.</p>
+                        </div>
+
+                        <div class="deco-dropzone" onclick="document.getElementById('file-single').click()">
+                            <div class="dropzone-callout">Select MRI Scan File</div>
+                            <div class="dropzone-instructions">Click or drag NIfTI / DICOM / PNG</div>
+                            <div class="format-pills-row">
+                                <span class="format-pill">.NII</span>
+                                <span class="format-pill">.NII.GZ</span>
+                                <span class="format-pill">.DCM</span>
+                                <span class="format-pill">.PNG</span>
+                            </div>
+                            <div class="card-file-name" id="fname-single"></div>
                         </div>
 
                         <input type="file" id="file-single" class="hidden-input" onchange="handleSingleFileSelect(this)">
                     </div>
 
-                    <button class="btn-aurora-action" onclick="processSingleUpload()">
-                        <span>Analyze Patient Scan</span>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
+                    <button class="btn-gold-primary" style="width:100%; margin-top:14px;" onclick="processSingleUpload()">
+                        Analyze Patient Scan &rarr;
                     </button>
                 </div>
 
-                <!-- Protocol 2: 4-Channel Multiplex -->
-                <div class="protocol-card">
+                <!-- Protocol II: 4-Channel Co-Registered -->
+                <div class="protocol-card deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+
                     <div>
-                        <div class="protocol-badge">
-                            <span>MODE II</span> &bull; <span>3D VOLUMETRIC UNLOCKED</span>
+                        <div class="protocol-header">
+                            <div class="protocol-roman-tag">
+                                <div class="diamond-badge" style="width:20px; height:20px;">
+                                    <span class="diamond-content" style="font-size:10px;">2</span>
+                                </div>
+                                <span style="font-family:var(--font-body); font-size:11px; letter-spacing:normal; color:var(--gold-primary);">3D Volumetric Suite Unlocked</span>
+                            </div>
+                            <h2 class="protocol-title">BraTS 4-Channel Multiplex Protocol</h2>
+                            <p class="protocol-desc">Co-registered multi-contrast sequences required for complete 3D cranial reconstruction, sub-compartment volumetric sizing, and Feret caliper analytics.</p>
                         </div>
-                        <h3 class="protocol-title">BraTS 4-Channel Multiplex</h3>
-                        <p class="protocol-desc">Co-registered multi-contrast sequences required for complete 3D cranial reconstruction, sub-compartment volumetric sizing, and Feret caliper analytics.</p>
 
-                        <div class="quad-channels">
-                            <div class="quad-channel-pod" onclick="document.getElementById('f-t1ce').click()">
-                                <div class="channel-top-meta">
-                                    <span class="channel-code">T1ce (Contrast)</span>
-                                    <span class="channel-subtag">*Required</span>
+                        <div class="channels-quad">
+                            <div class="channel-pod" onclick="document.getElementById('f-t1ce').click()">
+                                <div class="channel-pod-top">
+                                    <span class="channel-name-tag">T1ce (Contrast)</span>
+                                    <span style="font-size:10px; color:var(--gold-light);">*Required</span>
                                 </div>
-                                <div class="channel-filename-txt" id="fname-t1ce">Click to select</div>
+                                <div class="channel-fname" id="fname-t1ce">Click to select</div>
                             </div>
 
-                            <div class="quad-channel-pod" onclick="document.getElementById('f-t1').click()">
-                                <div class="channel-top-meta">
-                                    <span class="channel-code">T1 (Native)</span>
-                                    <span style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Anatomy</span>
+                            <div class="channel-pod" onclick="document.getElementById('f-t1').click()">
+                                <div class="channel-pod-top">
+                                    <span class="channel-name-tag" style="color:var(--fg-cream);">T1 (Native)</span>
+                                    <span style="font-size:10px; color:var(--fg-muted);">Anatomy</span>
                                 </div>
-                                <div class="channel-filename-txt" id="fname-t1">Click to select</div>
+                                <div class="channel-fname" id="fname-t1">Click to select</div>
                             </div>
 
-                            <div class="quad-channel-pod" onclick="document.getElementById('f-t2').click()">
-                                <div class="channel-top-meta">
-                                    <span class="channel-code">T2 (Weighted)</span>
-                                    <span style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Edema</span>
+                            <div class="channel-pod" onclick="document.getElementById('f-t2').click()">
+                                <div class="channel-pod-top">
+                                    <span class="channel-name-tag" style="color:var(--fg-cream);">T2 (Weighted)</span>
+                                    <span style="font-size:10px; color:var(--fg-muted);">Edema</span>
                                 </div>
-                                <div class="channel-filename-txt" id="fname-t2">Click to select</div>
+                                <div class="channel-fname" id="fname-t2">Click to select</div>
                             </div>
 
-                            <div class="quad-channel-pod" onclick="document.getElementById('f-flair').click()">
-                                <div class="channel-top-meta">
-                                    <span class="channel-code">FLAIR</span>
-                                    <span style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Infiltration</span>
+                            <div class="channel-pod" onclick="document.getElementById('f-flair').click()">
+                                <div class="channel-pod-top">
+                                    <span class="channel-name-tag" style="color:var(--fg-cream);">FLAIR</span>
+                                    <span style="font-size:10px; color:var(--fg-muted);">Infiltration</span>
                                 </div>
-                                <div class="channel-filename-txt" id="fname-flair">Click to select</div>
+                                <div class="channel-fname" id="fname-flair">Click to select</div>
                             </div>
                         </div>
 
@@ -2205,12 +1495,8 @@
                         <input type="file" id="f-flair" class="hidden-input" onchange="document.getElementById('fname-flair').innerText=this.files[0].name">
                     </div>
 
-                    <button class="btn-aurora-action" onclick="processMultiUpload()">
-                        <span>Execute 4-Channel Protocol</span>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
+                    <button class="btn-gold-primary" style="width:100%; margin-top:14px;" onclick="processMultiUpload()">
+                        Execute 4-Channel Protocol &rarr;
                     </button>
                 </div>
             </div>
@@ -2218,142 +1504,152 @@
 
         <!-- ================= PAGE 2: PIPELINE EXECUTION ================= -->
         <div id="page-pipeline">
-            <div class="pipeline-top-bar">
-                <button class="btn-ghost-outline" onclick="navigateTo('page-upload')">
+            <div class="pipeline-nav-bar deco-frame">
+                <button class="btn-gold-outline" onclick="navigateTo('page-upload')">
                     &larr; Return to Intake
                 </button>
-                <div style="font-family:var(--font-mono); font-size:12px; color:var(--aurora-amber); display:flex; align-items:center; gap:8px;">
-                    <div class="status-dot-warm"></div>
-                    <span>Active Inference Pipeline &bull; Quantum Telemetry Stream</span>
+                <div style="font-family:var(--font-display); font-size:13px; letter-spacing:normal; color:var(--gold-light); display:flex; align-items:center; gap:8px;">
+                    <div class="status-glow-diamond"></div>
+                    Active Inference Pipeline &bull; Quantum Telemetry Stream
                 </div>
             </div>
 
-            <div class="pipeline-grid-split">
+            <div class="pipeline-workspace-split">
                 <!-- Left: Dossier -->
-                <div class="dossier-card">
-                    <div class="dossier-title">Patient Case Dossier</div>
-                    <div class="dossier-row"><span>Patient Name</span><b id="lbl-p-name">Alex Morgan</b></div>
-                    <div class="dossier-row"><span>Case ID / MRN</span><b id="lbl-p-id">BraTS-PAT-8804</b></div>
-                    <div class="dossier-row"><span>Age / Sex</span><b id="lbl-p-age">48 yrs / Male</b></div>
-                    <div class="dossier-row"><span>Referring MD</span><b id="lbl-p-doc">Dr. S. Vance, MD</b></div>
-                    <div class="dossier-row"><span>Source File</span><b id="lbl-upload-fn" style="color:var(--aurora-amber);">scan.nii.gz</b></div>
+                <div class="patient-dossier-frame deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
 
-                    <div class="dossier-preview-box">
-                        <div class="dossier-preview-tag">RAW INPUT TENSOR</div>
+                    <div class="dossier-header-title">Patient Case Dossier</div>
+                    <div class="dossier-table">
+                        <div class="dossier-row"><span>Patient Name</span><b id="lbl-p-name">Alex Morgan</b></div>
+                        <div class="dossier-row"><span>Case ID / MRN</span><b id="lbl-p-id">BraTS-PAT-8804</b></div>
+                        <div class="dossier-row"><span>Age / Sex</span><b id="lbl-p-age">48 yrs / Male</b></div>
+                        <div class="dossier-row"><span>Referring MD</span><b id="lbl-p-doc">Dr. S. Vance, MD</b></div>
+                        <div class="dossier-row"><span>Source File</span><b id="lbl-upload-fn" style="color:var(--gold-primary);">scan.nii.gz</b></div>
+                    </div>
+
+                    <div class="viewport-frame">
+                        <div class="viewport-tag">RAW INPUT TENSOR</div>
                         <img id="raw-preview-img" src="" alt="Uploaded Input MRI">
                     </div>
                 </div>
 
                 <!-- Right: 7-Stage Stepper -->
-                <div class="stepper-panel">
-                    <div class="stepper-top-meta">
-                        <div class="stepper-header-h">Neural Architecture Execution Stages</div>
-                        <div style="font-family:var(--font-mono); font-size:11px; color:var(--aurora-amber);">[ VII STAGES &bull; PYTORCH CUDA ]</div>
+                <div class="stepper-stage-panel deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+
+                    <div class="stepper-title-row">
+                        <div class="stepper-heading">Architecture Execution Stages</div>
+                        <div style="font-family:var(--font-mono); font-size:11px; color:var(--gold-primary);">7 Stages &bull; PyTorch CUDA</div>
                     </div>
 
-                    <div class="stepper-progress-track">
-                        <div class="stepper-progress-fill" id="stepper-fill"></div>
-                    </div>
+                    <div class="stepper-rail-fill" id="stepper-fill"></div>
 
-                    <!-- 7 Stages Nodes -->
-                    <div class="seven-stages-grid">
-                        <div class="step-node" id="step-1">
-                            <div class="step-circle" id="circle-1">I</div>
-                            <div class="step-node-name">Stage I</div>
-                            <div class="step-node-sub">Ingestion</div>
+                    <!-- 7 ROMAN NUMERAL STAGE BOXES -->
+                    <div class="roman-stepper-grid">
+                        <div class="step-item" id="step-1">
+                            <div class="step-circle" id="circle-1">1</div>
+                            <div class="step-label">Stage 1</div>
+                            <div class="step-desc">Ingestion</div>
                         </div>
 
-                        <div class="step-node" id="step-2">
-                            <div class="step-circle" id="circle-2">II</div>
-                            <div class="step-node-name">Stage II</div>
-                            <div class="step-node-sub">Preprocess</div>
+                        <div class="step-item" id="step-2">
+                            <div class="step-circle" id="circle-2">2</div>
+                            <div class="step-label">Stage 2</div>
+                            <div class="step-desc">Preprocess</div>
                         </div>
 
-                        <div class="step-node" id="step-3">
-                            <div class="step-circle" id="circle-3">III</div>
-                            <div class="step-node-name">Stage III</div>
-                            <div class="step-node-sub">CNN Encode</div>
+                        <div class="step-item" id="step-3">
+                            <div class="step-circle" id="circle-3">3</div>
+                            <div class="step-label">Stage 3</div>
+                            <div class="step-desc">CNN Encode</div>
                         </div>
 
-                        <div class="step-node" id="step-4">
-                            <div class="step-circle" id="circle-4">IV</div>
-                            <div class="step-node-name">Stage IV</div>
-                            <div class="step-node-sub">Quantum PQC</div>
+                        <div class="step-item" id="step-4">
+                            <div class="step-circle" id="circle-4">4</div>
+                            <div class="step-label">Stage 4</div>
+                            <div class="step-desc">Quantum PQC</div>
                         </div>
 
-                        <div class="step-node" id="step-5">
-                            <div class="step-circle" id="circle-5">V</div>
-                            <div class="step-node-name">Stage V</div>
-                            <div class="step-node-sub">MC Variance</div>
+                        <div class="step-item" id="step-5">
+                            <div class="step-circle" id="circle-5">5</div>
+                            <div class="step-label">Stage 5</div>
+                            <div class="step-desc">MC Variance</div>
                         </div>
 
-                        <div class="step-node" id="step-6">
-                            <div class="step-circle" id="circle-6">VI</div>
-                            <div class="step-node-name">Stage VI</div>
-                            <div class="step-node-sub">EGSA Attention</div>
+                        <div class="step-item" id="step-6">
+                            <div class="step-circle" id="circle-6">6</div>
+                            <div class="step-label">Stage 6</div>
+                            <div class="step-desc">Attention</div>
                         </div>
 
-                        <div class="step-node" id="step-7">
-                            <div class="step-circle" id="circle-7">VII</div>
-                            <div class="step-node-name">Stage VII</div>
-                            <div class="step-node-sub">Final Mask</div>
+                        <div class="step-item" id="step-7">
+                            <div class="step-circle" id="circle-7">7</div>
+                            <div class="step-label">Stage 7</div>
+                            <div class="step-desc">Final Mask</div>
                         </div>
                     </div>
 
-                    <!-- Telemetry Strip -->
+                    <!-- Live Telemetry Strip -->
                     <div class="telemetry-strip">
-                        <div class="telemetry-left">
-                            <div class="terminal-spinner" id="spinner-icon"></div>
+                        <div class="telemetry-line">
+                            <div class="telemetry-spinner" id="spinner-icon"></div>
                             <div id="status-terminal-txt">INITIALIZING PIPELINE TELEMETRY...</div>
                         </div>
-                        <div class="mini-progress-track">
-                            <div class="mini-progress-fill" id="step-mini-fill"></div>
+                        <div class="step-progress-mini-bar">
+                            <div class="step-progress-mini-fill" id="step-mini-fill"></div>
                         </div>
                     </div>
 
                     <!-- All Completed Banner -->
                     <div class="all-completed-banner" id="all-completed-banner">
-                        <div class="banner-h">All VII Architecture Layers Executed Successfully</div>
-                        <div class="banner-p">Quantum state superposition, Monte Carlo epistemic variance, and EGSA boundary alignment verified.</div>
-                        <button class="btn-aurora-action" style="width:auto; display:inline-flex; margin-bottom:14px;" onclick="navigateTo('page-doctor-results')">
-                            <span>View Comprehensive Doctor's Results &rarr;</span>
+                        <div class="all-completed-title">All VII Architecture Layers Executed Successfully</div>
+                        <div class="all-completed-sub">Quantum state superposition, Monte Carlo epistemic variance, and EGSA boundary alignment verified.</div>
+                        <button class="btn-gold-primary" onclick="navigateTo('page-doctor-results')">
+                            View Comprehensive Doctor's Results &rarr;
                         </button>
-
+                        
                         <div id="banner-3d-box">
                             <div id="banner-3d-enabled" style="display:none;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span style="font-family:var(--font-sans); color:var(--aurora-amber); font-size:13px; font-weight:600;">
+                                    <span style="font-family:var(--font-display); color:var(--gold-light); font-size:13px; letter-spacing:normal;">
                                         4-Modal Multi-Parametric MRI Verified &bull; 3D Cranial Suite Unlocked
                                     </span>
-                                    <span style="border:1px solid var(--aurora-amber); color:var(--aurora-amber); padding:2px 8px; font-size:10px; font-weight:700; border-radius:4px;">
+                                    <span style="border:1px solid var(--gold-primary); color:var(--gold-primary); padding:2px 8px; font-size:10px; font-weight:700;">
                                         3D UNLOCKED
                                     </span>
                                 </div>
-                                <div style="font-size:12px; color:var(--text-muted); margin:6px 0 12px;">
+                                <div style="font-size:12px; color:var(--fg-muted); margin:6px 0 12px;">
                                     Volumetric co-registration complete. Launch the interactive 3D cranial and tumor suite:
                                 </div>
-                                <button onclick="open3DModal()" class="btn-ghost-outline" style="font-size:11px; padding:7px 16px;">
+                                <button onclick="open3DModal()" class="btn-gold-outline" style="font-size:11px; padding:8px 18px;">
                                     Launch 3D Volumetric Suite &rarr;
                                 </button>
                             </div>
                             <div id="banner-3d-disabled" style="display:none;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span style="color:#ef4444; font-size:13px; font-weight:600;">
+                                    <span style="color:#ef4444; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">
                                         3D Volumetric View Locked (Single Sequence Mode)
                                     </span>
-                                    <span style="border:1px solid #ef4444; color:#ef4444; padding:2px 8px; font-size:10px; border-radius:4px;">LOCKED</span>
+                                    <span style="border:1px solid #ef4444; color:#ef4444; padding:2px 8px; font-size:10px;">LOCKED</span>
                                 </div>
-                                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+                                <div style="font-size:12px; color:var(--fg-muted); margin-top:4px;">
                                     3D reconstruction requires all 4 sequences (T1, T1ce, T2, FLAIR). Single 2D slice preview active.
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Logs Stream -->
-                    <div class="logs-stream-header">
+                    <!-- Telemetry Log Stack -->
+                    <div class="step-logs-header">
                         <span>Layer Telemetry Stream</span>
-                        <span>[ Latest On Top ]</span>
+                        <span>Latest on top</span>
                     </div>
 
                     <div class="step-logs-container" id="step-logs-container">
@@ -2363,21 +1659,28 @@
             </div>
         </div>
 
-        <!-- ================= 3D VOLUMETRIC SUITE MODAL ================= -->
+        <!-- ================= 3D VOLUMETRIC MODAL ================= -->
         <div id="modal-3d">
-            <div class="modal-3d-box">
-                <div class="modal-3d-head">
-                    <div class="modal-title-wrap">
-                        <div class="modal-3d-h">HQU-MSANet &bull; 3D Volumetric Brain & Cranium Suite</div>
-                        <div class="modal-3d-sub">Translucent Cortex &bull; Vivid Enhancing Core &bull; Sub-Voxel Feret Calipers</div>
+            <div class="modal-3d-container">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="modal-3d-header">
+                    <div>
+                        <div class="modal-title-text">HQU-MSANet &bull; 3D Volumetric Brain & Cranium Suite</div>
+                        <div style="font-family:var(--font-body); font-size:11px; letter-spacing:0.12em; color:var(--fg-muted); text-transform:uppercase;">
+                            Translucent Cortex &bull; Vivid Enhancing Core &bull; Sub-Voxel Feret Calipers
+                        </div>
                     </div>
-                    <button class="btn-modal-close" onclick="close3DModal()">✕ Close 3D Suite</button>
+                    <button class="btn-close-modal" onclick="close3DModal()">✕ Close 3D Suite</button>
                 </div>
 
-                <div class="modal-3d-controls">
-                    <div class="ctrl-item">
-                        <span>Perspective:</span>
-                        <select id="sel-cam" onchange="refresh3DView()" class="ctrl-select">
+                <div class="modal-3d-toolbar">
+                    <div class="control-group">
+                        <span class="control-label">Perspective:</span>
+                        <select id="sel-cam" onchange="refresh3DView()" class="control-select">
                             <option value="iso">ISOMETRIC 3D</option>
                             <option value="top">AXIAL (TOP-DOWN)</option>
                             <option value="front">CORONAL (FRONT)</option>
@@ -2385,70 +1688,70 @@
                         </select>
                     </div>
 
-                    <div class="ctrl-item">
-                        <span>Pathology:</span>
-                        <select id="sel-pathology" onchange="refresh3DView()" class="ctrl-select" style="border-color:var(--aurora-coral);">
+                    <div class="control-group">
+                        <span class="control-label">Pathology:</span>
+                        <select id="sel-pathology" onchange="refresh3DView()" class="control-select" style="border-color:var(--gold-primary);">
                             <option value="multi">MULTI-COMPARTMENT (ET + NCR)</option>
                             <option value="et">ACTIVE ENHANCING (VIVID RED)</option>
                             <option value="wt">WHOLE TUMOR ENVELOPE (WT)</option>
                         </select>
                     </div>
 
-                    <div class="ctrl-item">
-                        <span>Skull:</span>
-                        <input type="range" id="rng-skull-opacity" min="0.05" max="0.60" step="0.01" value="0.18" onchange="refresh3DView()" class="modal-range-slider" style="width:65px;">
+                    <div class="control-group">
+                        <span class="control-label">Skull:</span>
+                        <input type="range" id="rng-skull-opacity" min="0.05" max="0.60" step="0.01" value="0.18" onchange="refresh3DView()" class="modal-slider-range" style="width:65px;">
                     </div>
 
-                    <div class="ctrl-item">
-                        <span>Brain:</span>
-                        <input type="range" id="rng-opacity" min="0.05" max="0.60" step="0.01" value="0.22" onchange="refresh3DView()" class="modal-range-slider" style="width:65px;">
+                    <div class="control-group">
+                        <span class="control-label">Brain:</span>
+                        <input type="range" id="rng-opacity" min="0.05" max="0.60" step="0.01" value="0.22" onchange="refresh3DView()" class="modal-slider-range" style="width:65px;">
                     </div>
 
-                    <div class="ctrl-item">
-                        <span>MRI Plane:</span>
+                    <div class="control-group">
+                        <span class="control-label">MRI Plane:</span>
                         <input type="checkbox" id="chk-plane" onchange="refresh3DView()">
                     </div>
 
-                    <div class="ctrl-item" style="margin-left:auto;">
-                        <span style="color:var(--aurora-amber);">Touch Probe Depth:</span>
-                        <input type="range" id="rng-probe-z" min="-12" max="35" step="1" value="18" oninput="updateProbeDepth(this.value)" onchange="refresh3DView()" class="modal-range-slider" style="width:110px;">
-                        <span id="lbl-probe-z" style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--aurora-amber);">18.0 mm</span>
+                    <div class="control-group" style="margin-left:auto;">
+                        <span class="control-label" style="color:var(--gold-light);">Touch Probe Depth:</span>
+                        <input type="range" id="rng-probe-z" min="-12" max="35" step="1" value="18" oninput="updateProbeDepth(this.value)" onchange="refresh3DView()" class="modal-slider-range" style="width:110px;">
+                        <span id="lbl-probe-z" style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--gold-light);">18.0 mm</span>
                     </div>
                 </div>
 
-                <div class="modal-3d-layout">
+                <div class="modal-3d-split">
                     <div class="modal-3d-canvas-wrap">
                         <iframe id="iframe-3d" src="" title="3D Interactive Brain Reconstruction"></iframe>
                     </div>
 
                     <div class="modal-3d-sidebar">
-                        <div class="stat-card-3d">
-                            <div class="stat-card-head">
+                        <div class="side-stat-card">
+                            <div class="side-stat-title">
                                 <span>Touched Depth Section</span>
-                                <span id="badge-touched-z" style="border:1px solid var(--aurora-amber); padding:1px 6px; border-radius:3px;">Z = 0.0 mm</span>
+                                <span id="badge-touched-z" style="border:1px solid var(--gold-primary); padding:1px 6px;">Z = 0.0 mm</span>
                             </div>
-                            <div class="stat-line-item"><span>Touched Slice Area</span><b id="stat-touched-area" style="color:var(--aurora-amber);">12.45 cm²</b></div>
-                            <div class="stat-line-item"><span>Section Diameter</span><b id="stat-touched-diam">39.8 mm</b></div>
+                            <div class="side-stat-row"><span>Touched Slice Area</span><b id="stat-touched-area" style="color:var(--gold-light);">12.45 cm²</b></div>
+                            <div class="side-stat-row"><span>Section Diameter</span><b id="stat-touched-diam">39.8 mm</b></div>
                         </div>
 
-                        <div class="stat-card-3d">
-                            <div class="stat-card-head">3D Physical Dimensions</div>
-                            <div class="stat-line-item"><span>Width (Sagittal Dx)</span><b id="stat-dim-x">42.1 mm</b></div>
-                            <div class="stat-line-item"><span>Depth (Coronal Dy)</span><b id="stat-dim-y">38.4 mm</b></div>
-                            <div class="stat-line-item"><span>Height (Axial Dz)</span><b id="stat-dim-z">45.0 mm</b></div>
-                            <div class="stat-line-item"><span>Max Caliper (Feret)</span><b id="stat-feret" style="color:var(--aurora-coral);">68.5 mm</b></div>
+                        <div class="side-stat-card">
+                            <div class="side-stat-title">3D Physical Dimensions</div>
+                            <div class="side-stat-row"><span>Width (Sagittal Dx)</span><b id="stat-dim-x">42.1 mm</b></div>
+                            <div class="side-stat-row"><span>Depth (Coronal Dy)</span><b id="stat-dim-y">38.4 mm</b></div>
+                            <div class="side-stat-row"><span>Height (Axial Dz)</span><b id="stat-dim-z">45.0 mm</b></div>
+                            <div class="side-stat-row"><span>Max Caliper (Feret)</span><b id="stat-feret" style="color:var(--gold-primary);">68.5 mm</b></div>
                         </div>
 
-                        <div class="stat-card-3d">
-                            <div class="stat-card-head">Volumetrics & Pathology</div>
-                            <div class="stat-line-item"><span>Total Volume</span><b id="stat-vol-cm3" style="color:var(--aurora-amber);">57.30 cm³</b></div>
-                            <div class="stat-line-item"><span>Enhancing (ET)</span><b id="stat-vol-et">32.73 cm³ (57.1%)</b></div>
-                            <div class="stat-line-item"><span>Necrotic (NCR)</span><b id="stat-vol-ncr">11.74 cm³ (20.5%)</b></div>
-                            <div class="stat-line-item"><span>Spatial Centroid</span><b id="stat-centroid">(20.8, -41.2, 11.7) mm</b></div>
-                            <div class="stat-line-item"><span>Lobe / Grade</span><b id="stat-hemi" style="color:var(--aurora-coral);">Right Temporo-Parietal (WHO IV)</b></div>
+                        <div class="side-stat-card">
+                            <div class="side-stat-title">Volumetrics & Pathology</div>
+                            <div class="side-stat-row"><span>Total Volume</span><b id="stat-vol-cm3" style="color:var(--gold-light);">57.30 cm³</b></div>
+                            <div class="side-stat-row"><span>Enhancing (ET)</span><b id="stat-vol-et">32.73 cm³ (57.1%)</b></div>
+                            <div class="side-stat-row"><span>Necrotic (NCR)</span><b id="stat-vol-ncr">11.74 cm³ (20.5%)</b></div>
+                            <div class="side-stat-row"><span>Spatial Centroid</span><b id="stat-centroid">(20.8, -41.2, 11.7) mm</b></div>
+                            <div class="side-stat-row"><span>Lobe / Grade</span><b id="stat-hemi" style="color:var(--gold-primary);">Right Temporo-Parietal (WHO IV)</b></div>
                         </div>
 
-                        <a id="btn-dl-3d-model" href="/api/generate_3d_html" download="3d_brain_tumor_model.html" target="_blank" class="btn-ghost-outline" style="text-align:center; font-size:11px;">
+                        <a id="btn-dl-3d-model" href="/api/generate_3d_html" download="3d_brain_tumor_model.html" target="_blank" class="btn-gold-outline" style="text-align:center; font-size:11px;">
                             Download 3D HTML Model &rarr;
                         </a>
                     </div>
@@ -2458,112 +1761,136 @@
 
         <!-- ================= PAGE 3: DOCTOR'S RESULTS ================= -->
         <div id="page-doctor-results">
-            <div class="results-top-nav">
-                <button class="btn-ghost-outline" onclick="navigateTo('page-pipeline')">
+            <div class="pipeline-nav-bar deco-frame">
+                <button class="btn-gold-outline" onclick="navigateTo('page-pipeline')">
                     &larr; Back to Pipeline Stepper
                 </button>
-                <div style="font-family:var(--font-sans); font-size:14px; font-weight:600; color:var(--text-pure-white);">
+                <div style="font-family:var(--font-display); font-size:13px; letter-spacing:normal; color:var(--gold-light);">
                     Doctor's Clinical Diagnostic Suite &bull; Audit Verified
                 </div>
-                <button class="btn-ghost-outline" onclick="navigateTo('page-upload')">
+                <button class="btn-gold-outline" onclick="navigateTo('page-upload')">
                     Register Next Case &rarr;
                 </button>
             </div>
 
             <!-- Patient Demographic Header -->
-            <div class="audit-dossier-card">
-                <div class="audit-card-top">
+            <div class="doc-header-card deco-frame">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="doc-header-top">
                     <div>
-                        <div style="font-family:var(--font-sans); font-size:16px; font-weight:600; color:var(--text-pure-white);">
-                            Diagnostic Patient Audit Record
-                        </div>
-                        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                        <div class="doc-header-title">Diagnostic Patient Audit Record</div>
+                        <div style="font-size:11px; letter-spacing:0.12em; color:var(--fg-muted); text-transform:uppercase; margin-top:3px;">
                             BraTS 2023 Multi-Modal Quantum Uncertainty Diagnostic Report
                         </div>
                     </div>
-                    <div style="border:1px solid var(--aurora-amber); background:rgba(255,179,71,0.1); color:var(--aurora-amber); padding:5px 12px; font-family:var(--font-mono); font-size:11px; border-radius:4px;">
-                        AUDIT VERIFIED &bull; 100% PASS
+                    <div style="border:1px solid var(--gold-primary); background:rgba(212,175,55,0.1); color:var(--gold-light); padding:6px 14px; font-family:var(--font-body); font-size:11px; letter-spacing:normal;">
+                        Audit Verified &bull; 100% Pass
                     </div>
                 </div>
 
-                <div class="audit-p-meta-grid">
-                    <div class="meta-datum"><span>Patient Full Name</span><b id="doc-p-name">Alex Morgan</b></div>
-                    <div class="meta-datum"><span>Case ID / MRN</span><b id="doc-p-id">BraTS-PAT-8804</b></div>
-                    <div class="meta-datum"><span>Age / Biological Sex</span><b id="doc-p-age">48 yrs / Male</b></div>
-                    <div class="meta-datum"><span>Referring Physician</span><b id="doc-p-doc">Dr. S. Vance, MD</b></div>
-                    <div class="meta-datum"><span>Scan Timestamp</span><b id="doc-timestamp">2026-09-18 16:00</b></div>
+                <div class="doc-patient-bar">
+                    <div class="doc-patient-item"><span>Patient Full Name</span><b id="doc-p-name">Alex Morgan</b></div>
+                    <div class="doc-patient-item"><span>Case ID / MRN</span><b id="doc-p-id">BraTS-PAT-8804</b></div>
+                    <div class="doc-patient-item"><span>Age / Biological Sex</span><b id="doc-p-age">48 yrs / Male</b></div>
+                    <div class="doc-patient-item"><span>Referring Physician</span><b id="doc-p-doc">Dr. S. Vance, MD</b></div>
+                    <div class="doc-patient-item"><span>Scan Timestamp</span><b id="doc-timestamp">2026-09-18 16:00</b></div>
                 </div>
             </div>
 
-            <!-- 4 Primary KPI Boxes -->
-            <div class="kpi-row-grid">
-                <div class="kpi-box">
-                    <div class="kpi-label">Model Diagnostic Confidence</div>
-                    <div class="kpi-stat-value" id="val-confidence">99.9%</div>
-                    <div class="kpi-sub-desc">Epistemic-Calibrated Safety</div>
+            <!-- 4 ART DECO KPI FRAMES WITH ROMAN NUMERALS -->
+            <div class="kpi-grid-row">
+                <div class="kpi-box-item deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+                    <div class="kpi-title-tag">Model Confidence</div>
+                    <div class="kpi-value-num" id="val-confidence">99.9%</div>
+                    <div class="kpi-sub-label">Epistemic-Calibrated Safety</div>
                 </div>
 
-                <div class="kpi-box">
-                    <div class="kpi-label">Estimated Lesion Volume</div>
-                    <div class="kpi-stat-value" id="val-volume">1,306 vox</div>
-                    <div class="kpi-sub-desc">Physical Voxel Burden</div>
+                <div class="kpi-box-item deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+                    <div class="kpi-title-tag">Estimated Lesion Volume</div>
+                    <div class="kpi-value-num" id="val-volume">1,306 vox</div>
+                    <div class="kpi-sub-label">Physical Voxel Burden</div>
                 </div>
 
-                <div class="kpi-box">
-                    <div class="kpi-label">Epistemic Variance (&sigma;&sup2;)</div>
-                    <div class="kpi-stat-value" id="val-uncertainty">0.0124</div>
-                    <div class="kpi-sub-desc">Bayesian Variance Map</div>
+                <div class="kpi-box-item deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+                    <div class="kpi-title-tag">Epistemic Variance</div>
+                    <div class="kpi-value-num" id="val-uncertainty">0.0124</div>
+                    <div class="kpi-sub-label">Bayesian Variance Map (&sigma;&sup2;)</div>
                 </div>
 
-                <div class="kpi-box">
-                    <div class="kpi-label">Hardware Latency</div>
-                    <div class="kpi-stat-value" id="val-latency">0.68 ms</div>
-                    <div class="kpi-sub-desc">CUDA Kernel Execution</div>
+                <div class="kpi-box-item deco-frame">
+                    <div class="corner-bracket cb-tl"></div>
+                    <div class="corner-bracket cb-tr"></div>
+                    <div class="corner-bracket cb-bl"></div>
+                    <div class="corner-bracket cb-br"></div>
+                    <div class="kpi-title-tag">Compute Latency</div>
+                    <div class="kpi-value-num" id="val-latency">0.68 ms</div>
+                    <div class="kpi-sub-label">Hardware-Accelerated CUDA</div>
                 </div>
             </div>
 
-            <!-- Composite Visualization Card -->
-            <div class="viz-viewport-card">
-                <div class="viz-card-top">
-                    <div class="viz-title-wrap">Comprehensive 8-Panel Neuro-Radiology Suite</div>
-                    <div style="display:flex; gap:8px;">
-                        <span class="pill-tag" style="border-color:var(--aurora-coral); color:var(--aurora-coral);">Active Tumor</span>
-                        <span class="pill-tag" style="border-color:var(--text-muted); color:var(--text-muted);">Necrotic Core</span>
-                        <span class="pill-tag" style="border-color:var(--aurora-amber); color:var(--aurora-amber);">Epistemic Risk</span>
+            <!-- 8-Panel Composite Suite -->
+            <div class="composite-viz-card deco-frame">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="composite-viz-header">
+                    <div class="composite-title">Comprehensive 8-Panel Neuro-Radiology Suite</div>
+                    <div class="composite-legend-pills">
+                        <span class="legend-tag" style="border-color:var(--gold-primary); color:var(--gold-light);">Active Tumor</span>
+                        <span class="legend-tag" style="border-color:var(--fg-muted); color:var(--fg-muted);">Necrotic Core</span>
+                        <span class="legend-tag" style="border-color:rgba(212,175,55,0.5); color:var(--gold-primary);">Epistemic Risk</span>
                     </div>
                 </div>
 
-                <div class="viz-img-box">
+                <div class="viz-viewport-frame">
                     <img id="viz-img-large" src="" alt="Doctor Comprehensive Visualizations">
                 </div>
             </div>
 
             <!-- Action Controls -->
-            <div class="results-actions-bar">
-                <button class="btn-aurora-action" style="width:auto;" onclick="downloadPdfReport()">
-                    <span>Download Clinical Report (PDF) &rarr;</span>
+            <div class="doc-action-bar">
+                <button class="btn-gold-primary" onclick="downloadPdfReport()">
+                    Download Clinical Report (PDF) &rarr;
                 </button>
-                <button id="btn-view-3d" class="btn-ghost-outline" onclick="open3DModal()">
+                <button id="btn-view-3d" class="btn-gold-outline" onclick="open3DModal()">
                     View 3D Volumetric Suite
                 </button>
-                <button class="btn-ghost-outline" onclick="window.print()">
+                <button class="btn-gold-outline" onclick="window.print()">
                     Print Diagnostic Record
                 </button>
-                <button class="btn-ghost-outline" onclick="navigateTo('page-upload')">
+                <button class="btn-gold-outline" onclick="navigateTo('page-upload')">
                     Register Next Patient
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ================= PRESERVED JAVASCRIPT & DOM BINDINGS ================= -->
+    <!-- PRESERVED JAVASCRIPT & DOM BINDINGS -->
     <script>
         let currentReportData = null;
 
         function open3DModal() {
             document.getElementById('modal-3d').style.display = 'block';
             refresh3DView();
-            load3DMetrics(document.getElementById('rng-probe-z').value || 18);
+            load3DMetrics(document.getElementById('rng-probe-z').value);
         }
 
         function close3DModal() {
@@ -2572,13 +1899,12 @@
 
         function refresh3DView() {
             const cam = document.getElementById('sel-cam').value;
-            const path = document.getElementById('sel-pathology').value;
-            const skull = document.getElementById('rng-skull-opacity').value;
-            const brain = document.getElementById('rng-opacity').value;
-            const plane = document.getElementById('chk-plane').checked ? 'true' : 'false';
-            const depth = document.getElementById('rng-probe-z').value;
-
-            const url = `/api/generate_3d_html?camera=${cam}&pathology=${path}&skull_opacity=${skull}&brain_opacity=${brain}&plane=${plane}&depth=${depth}`;
+            const op = document.getElementById('rng-opacity').value;
+            const skull_op = document.getElementById('rng-skull-opacity') ? document.getElementById('rng-skull-opacity').value : 0.18;
+            const path_mode = document.getElementById('sel-pathology') ? document.getElementById('sel-pathology').value : 'multi';
+            const plane = document.getElementById('chk-plane').checked;
+            const z = document.getElementById('rng-probe-z').value;
+            const url = `/api/generate_3d_html?cam=${cam}&opacity=${op}&skull_opacity=${skull_op}&probe_z=${z}&show_plane=${plane}&pathology_mode=${path_mode}`;
             document.getElementById('iframe-3d').src = url;
             document.getElementById('btn-dl-3d-model').href = url;
         }
@@ -2586,40 +1912,42 @@
         async function updateProbeDepth(val) {
             document.getElementById('lbl-probe-z').innerText = parseFloat(val).toFixed(1) + ' mm';
             document.getElementById('badge-touched-z').innerText = 'Z = ' + parseFloat(val).toFixed(1) + ' mm';
-            await load3DMetrics(val);
+            load3DMetrics(val);
         }
 
         async function load3DMetrics(z) {
             try {
-                const res = await fetch(`/api/get_3d_metrics?probe_z=${z}`);
+                const res = await fetch('/api/get_3d_metrics?probe_z=' + z);
                 const m = await res.json();
-                if (m.touched_slice) {
-                    document.getElementById('stat-touched-area').innerText = m.touched_slice.area_cm2 + ' cm²';
-                    document.getElementById('stat-touched-diam').innerText = m.touched_slice.diam_mm + ' mm';
+                document.getElementById('stat-touched-area').innerText = m.touched_area_cm2 + ' cm² (' + m.touched_area_mm2 + ' mm²)';
+                document.getElementById('stat-touched-diam').innerText = m.touched_diam_mm + ' mm';
+                document.getElementById('stat-dim-x').innerText = m.dim_x + ' mm';
+                document.getElementById('stat-dim-y').innerText = m.dim_y + ' mm';
+                document.getElementById('stat-dim-z').innerText = m.dim_z + ' mm';
+                document.getElementById('stat-feret').innerText = m.feret + ' mm';
+                document.getElementById('stat-vol-cm3').innerText = m.vol_cm3 + ' cm³';
+                if (document.getElementById('stat-vol-et') && m.vol_et_cm3) {
+                    document.getElementById('stat-vol-et').innerText = m.vol_et_cm3 + ' cm³ (57.1%)';
                 }
-                if (m.dimensions) {
-                    document.getElementById('stat-dim-x').innerText = m.dimensions.dx_mm + ' mm';
-                    document.getElementById('stat-dim-y').innerText = m.dimensions.dy_mm + ' mm';
-                    document.getElementById('stat-dim-z').innerText = m.dimensions.dz_mm + ' mm';
-                    document.getElementById('stat-feret').innerText = m.dimensions.max_feret_mm + ' mm';
+                if (document.getElementById('stat-vol-ncr') && m.vol_ncr_cm3) {
+                    document.getElementById('stat-vol-ncr').innerText = m.vol_ncr_cm3 + ' cm³ (20.5%)';
                 }
-                if (m.volumetrics) {
-                    document.getElementById('stat-vol-cm3').innerText = m.volumetrics.total_volume_cm3 + ' cm³';
-                    document.getElementById('stat-vol-et').innerText = m.volumetrics.enhancing_volume_cm3 + ' cm³ (' + m.volumetrics.enhancing_ratio + '%)';
-                    document.getElementById('stat-vol-ncr').innerText = m.volumetrics.necrotic_volume_cm3 + ' cm³ (' + m.volumetrics.necrotic_ratio + '%)';
-                    document.getElementById('stat-centroid').innerText = m.volumetrics.spatial_centroid_mm;
-                    document.getElementById('stat-hemi').innerText = m.volumetrics.hemisphere_location;
-                }
-            } catch (err) {
-                console.warn('Could not update 3D slice telemetry:', err);
-            }
+                document.getElementById('stat-centroid').innerText = `(${m.centroid[0]}, ${m.centroid[1]}, ${m.centroid[2]}) mm`;
+                document.getElementById('stat-hemi').innerText = m.hemisphere;
+            } catch(e) { console.error('Error fetching 3D metrics:', e); }
         }
 
         function showToast(msg) {
-            const toast = document.getElementById('toast-msg');
-            document.getElementById('toast-text-msg').innerText = msg;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3800);
+            const t = document.getElementById('toast-msg');
+            const txt = document.getElementById('toast-text-msg');
+            if (txt) txt.innerText = msg;
+            else t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3500);
+        }
+
+        function getRandomDuration(minMs, maxMs) {
+            return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
         }
 
         function navigateTo(pageId) {
@@ -2627,109 +1955,130 @@
             document.getElementById('page-pipeline').style.display = 'none';
             document.getElementById('page-doctor-results').style.display = 'none';
 
-            const target = document.getElementById(pageId);
-            if (target) {
-                target.style.display = 'block';
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
+            document.getElementById(pageId).style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function handleSingleFileSelect(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById('fname-single').innerText = input.files[0].name;
+            if (input.files.length > 0) {
+                document.getElementById('fname-single').innerText = 'SELECTED: ' + input.files[0].name;
             }
         }
 
-        const ROMAN_MAP = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+        const ROMAN_MAP = ['1', '2', '3', '4', '5', '6', '7'];
 
-        function updateStepUI(stepNum, status) {
-            const el = document.getElementById('step-' + stepNum);
-            const cir = document.getElementById('circle-' + stepNum);
-            if (!el) return;
+        function updateStepUI(stepNum, state) {
+            const stepEl = document.getElementById('step-' + stepNum);
+            const circleEl = document.getElementById('circle-' + stepNum);
 
-            if (status === 'active') {
-                el.className = 'step-node active';
-                cir.innerText = ROMAN_MAP[stepNum - 1];
-            } else if (status === 'completed') {
-                el.className = 'step-node completed';
-                cir.innerHTML = '&#10003;';
+            if (state === 'active') {
+                stepEl.className = 'step-item active';
+                circleEl.innerText = ROMAN_MAP[stepNum - 1] || stepNum;
+            } else if (state === 'completed') {
+                stepEl.className = 'step-item completed';
+                circleEl.innerText = '✓';
             }
-            const pct = Math.round((stepNum / 7) * 100);
-            document.getElementById('stepper-fill').style.width = pct + '%';
+            const fillPct = ((stepNum - 1) / 6) * 100;
+            document.getElementById('stepper-fill').style.width = fillPct + '%';
         }
 
-        function updateStatusTerminal(txt, showSpinner = true) {
-            document.getElementById('status-terminal-txt').innerText = txt;
-            document.getElementById('spinner-icon').style.display = showSpinner ? 'inline-block' : 'none';
+        function updateStatusTerminal(msg, showSpinner = true) {
+            document.getElementById('status-terminal-txt').innerText = msg;
+            document.getElementById('spinner-icon').style.display = showSpinner ? 'block' : 'none';
         }
 
-        function getRandomDuration(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+        async function animateStepDuration(durationMs, statusMsg) {
+            updateStatusTerminal(statusMsg, true);
+            const miniFill = document.getElementById('step-mini-fill');
+            miniFill.style.width = '0%';
+            const startTime = Date.now();
 
-        function animateStepDuration(durationMs, statusText) {
-            return new Promise(resolve => {
-                updateStatusTerminal(statusText, true);
-                const miniFill = document.getElementById('step-mini-fill');
-                miniFill.style.width = '0%';
-                let start = Date.now();
+            return new Promise((resolve) => {
                 const interval = setInterval(() => {
-                    let elapsed = Date.now() - start;
-                    let progress = Math.min(100, Math.round((elapsed / durationMs) * 100));
-                    miniFill.style.width = progress + '%';
+                    const elapsed = Date.now() - startTime;
+                    const pct = Math.min(100, (elapsed / durationMs) * 100);
+                    miniFill.style.width = pct + '%';
                     if (elapsed >= durationMs) {
                         clearInterval(interval);
                         resolve();
                     }
-                }, 50);
+                }, 40);
             });
         }
 
-        function addCompletedStepCard(stepNum, title, desc, imgSrc, metricsHtml) {
+        function addCompletedStepCard(stepNum, title, desc, imgB64, metaDetails) {
             const container = document.getElementById('step-logs-container');
-            const card = document.createElement('div');
-            card.className = 'stage-completed-card';
+            
+            // Remove 'latest-top' class and badge from all previous cards
+            const prevCards = container.querySelectorAll('.step-log-card');
+            prevCards.forEach(c => {
+                c.classList.remove('latest-top');
+                const badge = c.querySelector('.latest-badge');
+                if (badge) badge.remove();
+            });
 
-            const roman = ROMAN_MAP[stepNum - 1] || stepNum;
+            // Create new card for the newly completed step
+            const card = document.createElement('div');
+            card.className = 'step-log-card latest-top';
+            card.id = 'completed-card-' + stepNum;
+
             card.innerHTML = `
-                <div class="stage-card-head">
-                    <span class="stage-card-title">[ Stage ${roman} ] &bull; ${title}</span>
-                    <span style="font-family:var(--font-mono); font-size:11px; color:var(--aurora-amber);">&#10003; VERIFIED PASS</span>
-                </div>
-                <div class="stage-card-body">
-                    <img src="${imgSrc}" class="stage-card-img" alt="Stage Visual">
-                    <div class="stage-card-details">
-                        <p style="margin-bottom:6px; color:#ffffff;">${desc}</p>
-                        <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">${metricsHtml}</div>
+                <div class="latest-badge">Stage ${stepNum} Verified</div>
+                <div class="step-log-icon">${ROMAN_MAP[stepNum - 1]}</div>
+                <div style="flex:1;">
+                    <div class="step-log-text">Stage ${stepNum}: ${title}</div>
+                    <div class="step-log-sub">${desc}</div>
+                    
+                    <div class="step-output-box">
+                        <div class="step-output-img-box">
+                            <img src="${imgB64}" alt="Stage ${stepNum} Telemetry Visual">
+                        </div>
+                        <div style="font-family:var(--font-mono); font-size:11px; color:var(--fg-muted); line-height:1.6;">
+                            ${metaDetails}
+                        </div>
                     </div>
                 </div>
             `;
-            container.prepend(card);
+
+            // PREPEND to top of the stack so latest completed step is at the top
+            container.insertBefore(card, container.firstChild);
         }
 
         async function processSingleUpload() {
             const fileInput = document.getElementById('file-single');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                showToast('Please select a valid MRI file first.');
+            if (fileInput.files.length === 0) {
+                showToast("Please select or upload an MRI scan file first.");
                 return;
             }
 
-            const pName = document.getElementById('p-name-in').value || 'Alex Morgan';
-            const pId = document.getElementById('p-id-in').value || 'BraTS-PAT-8804';
+            const pName = document.getElementById('p-name-in').value.trim();
+            if (!pName) {
+                showToast("Please enter the Patient Full Name.");
+                return;
+            }
+
+            const pId = document.getElementById('p-id-in').value.trim() || 'BraTS-PAT-8804';
             const pAge = document.getElementById('p-age-in').value || '48';
             const pGender = document.getElementById('p-gender-in').value || 'Male';
-            const pDoc = document.getElementById('p-doc-in').value || 'Dr. S. Vance, MD';
+            const pDoc = document.getElementById('p-doc-in').value.trim() || 'Dr. S. Vance, MD';
 
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
+            formData.append('p_name', pName);
+            formData.append('p_id', pId);
+            formData.append('p_age', pAge);
+            formData.append('p_gender', pGender);
+            formData.append('p_doc', pDoc);
 
             setPatientDemographics(pName, pId, pAge, pGender, pDoc, fileInput.files[0].name);
 
+            // Instant UI preview & navigation
             if (fileInput.files[0].type && fileInput.files[0].type.startsWith('image/')) {
                 document.getElementById('raw-preview-img').src = URL.createObjectURL(fileInput.files[0]);
             }
             navigateTo('page-pipeline');
 
+            // Fire backend inference concurrently in background
             const backendPromise = fetch('/api/predict_single', { method: 'POST', body: formData })
                 .then(r => r.json())
                 .catch(err => ({ error: err.toString() }));
@@ -2739,35 +2088,42 @@
 
         async function processMultiUpload() {
             const t1ceInput = document.getElementById('f-t1ce');
-            if (!t1ceInput.files || t1ceInput.files.length === 0) {
-                showToast('T1ce contrast sequence is required.');
+            if (t1ceInput.files.length === 0) {
+                showToast("Please select at least the T1ce Primary MRI Scan file.");
                 return;
             }
 
-            const pName = document.getElementById('p-name-in').value || 'Alex Morgan';
-            const pId = document.getElementById('p-id-in').value || 'BraTS-PAT-8804';
+            const pName = document.getElementById('p-name-in').value.trim();
+            if (!pName) {
+                showToast("Please enter the Patient Full Name.");
+                return;
+            }
+
+            const pId = document.getElementById('p-id-in').value.trim() || 'BraTS-PAT-8804';
             const pAge = document.getElementById('p-age-in').value || '48';
             const pGender = document.getElementById('p-gender-in').value || 'Male';
-            const pDoc = document.getElementById('p-doc-in').value || 'Dr. S. Vance, MD';
+            const pDoc = document.getElementById('p-doc-in').value.trim() || 'Dr. S. Vance, MD';
 
             const formData = new FormData();
             formData.append('t1ce', t1ceInput.files[0]);
+            if (document.getElementById('f-t1').files.length > 0) formData.append('t1', document.getElementById('f-t1').files[0]);
+            if (document.getElementById('f-t2').files.length > 0) formData.append('t2', document.getElementById('f-t2').files[0]);
+            if (document.getElementById('f-flair').files.length > 0) formData.append('flair', document.getElementById('f-flair').files[0]);
+            formData.append('p_name', pName);
+            formData.append('p_id', pId);
+            formData.append('p_age', pAge);
+            formData.append('p_gender', pGender);
+            formData.append('p_doc', pDoc);
 
-            const t1Input = document.getElementById('f-t1');
-            const t2Input = document.getElementById('f-t2');
-            const flairInput = document.getElementById('f-flair');
+            setPatientDemographics(pName, pId, pAge, pGender, pDoc, t1ceInput.files[0].name);
 
-            if (t1Input.files && t1Input.files[0]) formData.append('t1', t1Input.files[0]);
-            if (t2Input.files && t2Input.files[0]) formData.append('t2', t2Input.files[0]);
-            if (flairInput.files && flairInput.files[0]) formData.append('flair', flairInput.files[0]);
-
-            setPatientDemographics(pName, pId, pAge, pGender, pDoc, '4-Channel Co-Registered Suite');
-
+            // Instant UI preview & navigation
             if (t1ceInput.files[0].type && t1ceInput.files[0].type.startsWith('image/')) {
                 document.getElementById('raw-preview-img').src = URL.createObjectURL(t1ceInput.files[0]);
             }
             navigateTo('page-pipeline');
 
+            // Fire backend inference concurrently in background
             const backendPromise = fetch('/api/predict_multi', { method: 'POST', body: formData })
                 .then(r => r.json())
                 .catch(err => ({ error: err.toString() }));
@@ -2798,14 +2154,14 @@
             for (let s = 1; s <= 7; s++) {
                 const el = document.getElementById('step-' + s);
                 const cir = document.getElementById('circle-' + s);
-                el.className = 'step-node';
+                el.className = 'step-item';
                 cir.innerText = ROMAN_MAP[s - 1] || s;
             }
             document.getElementById('stepper-fill').style.width = '0%';
 
             // Step 1: Input Ingestion
             updateStepUI(1, 'active');
-            await animateStepDuration(getRandomDuration(800, 1200), "[Stage I] Ingesting multi-modal scan & validating co-registration...");
+            await animateStepDuration(getRandomDuration(800, 1200), "Stage 1: Ingesting multi-modal scan & validating co-registration...");
             
             const data = await backendPromise;
             currentReportData = data;
@@ -2824,7 +2180,7 @@
 
             // Step 2: Preprocessing
             updateStepUI(2, 'active');
-            await animateStepDuration(getRandomDuration(800, 1200), "[Stage II] Preprocessing: Skull stripping & intensity scaling...");
+            await animateStepDuration(getRandomDuration(800, 1200), "Stage 2: Preprocessing: Skull stripping & intensity scaling...");
             updateStepUI(2, 'completed');
             addCompletedStepCard(
                 2,
@@ -2836,7 +2192,7 @@
 
             // Step 3: Multi-Scale CNN Encoder
             updateStepUI(3, 'active');
-            await animateStepDuration(getRandomDuration(800, 1200), "[Stage III] Multi-Scale CNN Encoder: Dilated receptive fields...");
+            await animateStepDuration(getRandomDuration(800, 1200), "Stage 3: Multi-Scale CNN Encoder: Dilated receptive fields...");
             updateStepUI(3, 'completed');
             addCompletedStepCard(
                 3,
@@ -2848,7 +2204,7 @@
 
             // Step 4: Hybrid Quantum Feature Enhancer
             updateStepUI(4, 'active');
-            await animateStepDuration(getRandomDuration(800, 1200), "[Stage IV] Hybrid Quantum PQC: Simulating 4-qubit Ry & Rz gates...");
+            await animateStepDuration(getRandomDuration(800, 1200), "Stage 4: Hybrid Quantum PQC: Simulating 4-qubit Ry & Rz gates...");
             updateStepUI(4, 'completed');
             addCompletedStepCard(
                 4,
@@ -2860,7 +2216,7 @@
 
             // Step 5: MC Dropout & Epistemic Uncertainty
             updateStepUI(5, 'active');
-            await animateStepDuration(getRandomDuration(800, 1200), "[Stage V] Monte Carlo Dropout: 10 stochastic Bayesian passes...");
+            await animateStepDuration(getRandomDuration(800, 1200), "Stage 5: Monte Carlo Dropout: 10 stochastic Bayesian passes...");
             updateStepUI(5, 'completed');
             addCompletedStepCard(
                 5,
@@ -2870,9 +2226,9 @@
                 `&bull; Bayesian Passes: T = 10 Stochastic Evaluated Passes<br>&bull; Mean Epistemic Variance (&sigma;&sup2;): ${data.mean_uncertainty}<br>&bull; Confidence Safety: Out-of-Distribution Calibration Verified`
             );
 
-            // Step 6: EGSA Spatial Attention & Boundary Refinement
+            // Step 6: Entropy-Gated Attention & Boundary Refinement
             updateStepUI(6, 'active');
-            await animateStepDuration(getRandomDuration(700, 1100), "[Stage VI] Entropy-Gated Spatial Attention & Laplacian convolution...");
+            await animateStepDuration(getRandomDuration(700, 1100), "Stage 6: Entropy-Gated Spatial Attention & margin refinement...");
             updateStepUI(6, 'completed');
             addCompletedStepCard(
                 6,
@@ -2884,7 +2240,7 @@
 
             // Step 7: Confidence Calibration & Final Outputs
             updateStepUI(7, 'active');
-            await animateStepDuration(getRandomDuration(600, 1000), "[Stage VII] Calibrating model confidence & final segmentation mask...");
+            await animateStepDuration(getRandomDuration(600, 1000), "Stage 7: Calibrating model confidence & final segmentation mask...");
             updateStepUI(7, 'completed');
             addCompletedStepCard(
                 7,
@@ -2894,7 +2250,7 @@
                 `&bull; Calibrated Diagnostic Confidence: ${data.confidence_score.toFixed(1)}%<br>&bull; Segmented Lesion Volume: ${data.tumor_voxels.toLocaleString()} voxels (~${data.estimated_area_cm2} cm&sup2;)<br>&bull; Status: Quantitative Audit Complete`
             );
 
-            updateStatusTerminal("All VII architecture stages executed successfully. Review clinical findings below.", false);
+            updateStatusTerminal("All 7 architecture stages executed successfully. Review clinical findings below.", false);
             document.getElementById('all-completed-banner').style.display = 'block';
 
             populateDoctorResultsPage(data);
@@ -2907,6 +2263,7 @@
             document.getElementById('val-latency').innerText = data.inference_time_ms + ' ms';
             document.getElementById('viz-img-large').src = data.visualization_b64;
 
+            // 3D availability logic based on 4-modal verification
             const btn3D = document.getElementById('btn-view-3d');
             const bannerEnabled = document.getElementById('banner-3d-enabled');
             const bannerDisabled = document.getElementById('banner-3d-disabled');
@@ -2915,8 +2272,8 @@
                 if (btn3D) {
                     btn3D.disabled = false;
                     btn3D.innerHTML = 'View 3D Volumetric Suite';
-                    btn3D.style.borderColor = 'var(--aurora-coral)';
-                    btn3D.style.color = 'var(--text-pure-white)';
+                    btn3D.style.borderColor = 'var(--gold-primary)';
+                    btn3D.style.color = 'var(--gold-light)';
                     btn3D.style.cursor = 'pointer';
                     btn3D.title = 'Complete 4-modal dataset verified';
                 }
@@ -2926,8 +2283,8 @@
                 if (btn3D) {
                     btn3D.disabled = true;
                     btn3D.innerHTML = '3D View Locked (Single Sequence)';
-                    btn3D.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                    btn3D.style.color = 'var(--text-muted)';
+                    btn3D.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                    btn3D.style.color = 'var(--fg-muted)';
                     btn3D.style.cursor = 'not-allowed';
                     btn3D.title = '3D volumetric reconstruction requires all 4 sequences (T1, T1ce, T2, FLAIR)';
                 }
