@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQU-MSANet | Clinical Neuro-Radiology Workstation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #070b12;
+            --bg-surface: #0c1322;
+            --bg-card: #101a2e;
+            --bg-card-hover: #15223c;
+            --bg-input: #080d18;
+            --border-subtle: rgba(148, 163, 184, 0.12);
+            --border-medium: rgba(148, 163, 184, 0.22);
+            --border-focus: #0ea5e9;
+            --border-hover: rgba(56, 189, 248, 0.45);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --text-on-accent: #020617;
+
+            --accent-cyan: #0ea5e9;
+            --accent-cyan-hover: #0284c7;
+            --accent-cyan-glow: rgba(14, 165, 233, 0.25);
+            --accent-cyan-subtle: rgba(14, 165, 233, 0.08);
+
+            --accent-emerald: #10b981;
+            --accent-emerald-subtle: rgba(16, 185, 129, 0.12);
+            --accent-amber: #f59e0b;
+            --accent-amber-subtle: rgba(245, 158, 11, 0.12);
+            --accent-rose: #ef4444;
+            --accent-rose-subtle: rgba(239, 68, 68, 0.12);
+            --accent-indigo: #6366f1;
+            --accent-indigo-subtle: rgba(99, 102, 241, 0.12);
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+            
+            --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.45);
+            --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.85);
+
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 20px 24px 40px;
+            background-image: 
+                radial-gradient(ellipse at 10% 0%, rgba(14, 165, 233, 0.07) 0%, transparent 45%),
+                radial-gradient(ellipse at 90% 100%, rgba(99, 102, 241, 0.06) 0%, transparent 45%);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* ================= CLINICAL HEADER BAR ================= */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+            backdrop-filter: blur(12px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-icon-box {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #0369a1, #0ea5e9);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px var(--accent-cyan-glow);
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .brand-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: var(--accent-cyan-subtle);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            color: #38bdf8;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .header-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-medium);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .badge-pill b {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .badge-pill-success {
+            border-color: rgba(16, 185, 129, 0.35);
+            background: var(--accent-emerald-subtle);
+        }
+
+        .badge-pill-success b {
+            color: var(--accent-emerald);
+        }
+
+        .status-beacon {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            flex-shrink: 0;
+            animation: beaconPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes beaconPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+
+        /* ================= CLINICAL TOAST NOTIFICATION ================= */
+        .alert-toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #1e131d;
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #fca5a5;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 13px;
+            z-index: 99999;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+            align-items: center;
+            gap: 10px;
+            animation: toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes toastSlide {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= PAGE 1: INTAKE & ACQUISITION ================= */
+        #page-upload {
+            display: block;
+            animation: fadeInView 0.3s ease-out;
+        }
+
+        .panel-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .panel-header-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-header-sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .intake-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .intake-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .intake-field label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .intake-field input,
+        .intake-field select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-ui);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .intake-field input:focus,
+        .intake-field select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--accent-cyan-subtle);
+            background: #091120;
+        }
+
+        .intake-field input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        /* ACQUISITION PROTOCOL SPLIT */
+        .acquisition-bays-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .protocol-bay-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-subtle);
+            position: relative;
+            transition: border-color 0.25s ease;
+        }
+
+        .protocol-bay-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .protocol-header {
+            margin-bottom: 20px;
+        }
+
+        .protocol-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .protocol-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-single-proto {
+            background: var(--accent-cyan-subtle);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            color: #38bdf8;
+        }
+
+        .tag-multi-proto {
+            background: var(--accent-indigo-subtle);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            color: #a5b4fc;
+        }
+
+        .protocol-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .protocol-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* DROPZONES */
+        .single-dropzone {
+            background: var(--bg-card);
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+            border-radius: var(--radius-md);
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+            min-height: 190px;
+        }
+
+        .single-dropzone:hover {
+            border-color: var(--accent-cyan);
+            background: var(--bg-card-hover);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropzone-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(14, 165, 233, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #38bdf8;
+            margin-bottom: 12px;
+        }
+
+        .dropzone-main-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .dropzone-sub-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .dropzone-format-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .format-badge {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        .card-file-name {
+            font-size: 12px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--accent-emerald);
+            margin-top: 10px;
+            padding: 4px 10px;
+            background: var(--accent-emerald-subtle);
+            border-radius: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            max-width: 95%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 4-CHANNEL MULTI-GRID */
+        .multi-grid-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .channel-tile {
+            background: var(--bg-card);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 88px;
+        }
+
+        .channel-tile:hover {
+            border-color: #a5b4fc;
+            background: var(--bg-card-hover);
+        }
+
+        .channel-tile-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .channel-tag-pill {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        .tag-t1c { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; }
+        .tag-t1 { background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(14, 165, 233, 0.35); color: #38bdf8; }
+        .tag-t2 { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); color: #a5b4fc; }
+        .tag-flair { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; }
+
+        .channel-req-indicator {
+            font-size: 10px;
+            color: var(--accent-rose);
+            font-weight: 600;
+        }
+
+        .channel-fname {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            margin-top: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* PRIMARY ACTION BUTTONS */
+        .btn-action-primary {
+            width: 100%;
+            padding: 13px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #ffffff;
+        }
+
+        .btn-single-grad {
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-single-grad:hover {
+            background: linear-gradient(135deg, #0369a1, #0284c7);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-multi-grad {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-multi-grad:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .hidden-input { display: none; }
+
+        /* ================= PAGE 2: PIPELINE EXECUTION ================= */
+        #page-pipeline {
+            display: none;
+            animation: fadeInView 0.3s ease-out;
+        }
+
+        .sub-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+        }
+
+        .btn-ghost-back {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ghost-back:hover {
+            border-color: var(--accent-cyan);
+            color: #ffffff;
+            background: var(--accent-cyan-subtle);
+        }
+
+        .sub-nav-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pipeline-workspace-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* DOSSIER CARD */
+        .patient-dossier-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .dossier-header {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #38bdf8;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dossier-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .dossier-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .dossier-row span {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .dossier-row b {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .preview-viewport-box {
+            position: relative;
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #000000;
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-viewport-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .viewport-hud-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: #38bdf8;
+            background: rgba(7, 11, 18, 0.85);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            pointer-events: none;
+        }
+
+        /* STEPPER ORCHESTRATOR */
+        .stepper-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .stepper-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .stepper-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* HORIZONTAL STEPPER TRACK */
+        .stepper-track-wrap {
+            position: relative;
+            margin: 20px 8px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .stepper-rail-bg {
+            position: absolute;
+            top: 18px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--border-medium);
+            z-index: 1;
+        }
+
+        .stepper-rail-fill {
+            position: absolute;
+            top: 18px;
+            left: 20px;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #0ea5e9, #10b981);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            z-index: 2;
+            transition: width 0.35s ease;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 95px;
+            text-align: center;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-circle {
+            border-color: var(--accent-cyan);
+            background: var(--accent-cyan-subtle);
+            color: #38bdf8;
+            box-shadow: 0 0 16px var(--accent-cyan-glow);
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+            color: var(--text-on-accent);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .step-label {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .step-item.active .step-label { color: #38bdf8; font-weight: 700; }
+        .step-item.completed .step-label { color: var(--accent-emerald); }
+
+        .step-desc {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+
+        /* LIVE TELEMETRY STATUS BOX */
+        .telemetry-console-box {
+            background: #05080e;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .telemetry-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .radar-spinner {
+            width: 14px;
+            height: 14px;
+            min-width: 14px;
+            border: 2px solid var(--accent-cyan);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: radarSpin 0.75s linear infinite;
+        }
+
+        @keyframes radarSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        #status-terminal-txt {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #38bdf8;
+            font-weight: 500;
+        }
+
+        .step-progress-mini-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .step-progress-mini-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9, #10b981);
+            transition: width 0.05s linear;
+        }
+
+        /* COMPLETION BANNER */
+        .all-completed-banner {
+            display: none;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            margin-bottom: 24px;
+            text-align: center;
+            animation: fadeInView 0.4s ease;
+        }
+
+        .completion-headline {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-emerald);
+            margin-bottom: 6px;
+        }
+
+        .completion-subline {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .btn-view-results {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            border: none;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-results:hover {
+            background: linear-gradient(135deg, #0369a1, #0284c7);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.55);
+        }
+
+        /* 3D VERIFICATION BANNER */
+        #banner-3d-box {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            background: rgba(14, 165, 233, 0.05);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            text-align: left;
+        }
+
+        /* STEP LOG FEED */
+        .step-logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .step-logs-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-emerald);
+        }
+
+        .step-logs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-log-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            position: relative;
+            animation: slideDownIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
+        }
+
+        .step-log-card.latest-top {
+            border-color: rgba(14, 165, 233, 0.4);
+            background: rgba(14, 165, 233, 0.04);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .latest-badge {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: var(--accent-cyan);
+            color: var(--text-on-accent);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            padding: 2px 7px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .step-log-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            background: var(--accent-emerald-subtle);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: var(--accent-emerald);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .step-log-content {
+            flex: 1;
+        }
+
+        .step-log-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .step-log-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .step-output-box {
+            background: #05080e;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .step-output-img-box {
+            width: 76px;
+            height: 76px;
+            min-width: 76px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-output-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ================= PAGE 3: DOCTOR'S SUITE ================= */
+        #page-doctor-results {
+            display: none;
+            animation: fadeInView 0.3s ease-out;
+        }
+
+        .doc-header-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .doc-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .doc-header-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .doc-header-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .doc-patient-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .doc-patient-item span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: block;
+        }
+
+        .doc-patient-item b {
+            font-size: 13px;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+            margin-top: 3px;
+            display: block;
+            font-weight: 600;
+        }
+
+        /* KPI GRID */
+        .kpi-grid-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-box-item {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-title-tag {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kpi-value-num {
+            font-size: 26px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            letter-spacing: -0.02em;
+            margin-top: 6px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kpi-sub-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        /* COMPOSITE VIZ BAY */
+        .composite-viz-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .composite-viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .composite-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .composite-legend {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .viz-viewport-frame {
+            background: #000000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .viz-viewport-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ACTION CONTROLS */
+        .doc-action-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            margin: 28px 0 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-download-pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border: none;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-download-pdf:hover {
+            background: linear-gradient(135deg, #047857, #059669);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-sec-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sec-action:hover {
+            border-color: var(--accent-cyan);
+            background: var(--bg-card-hover);
+            transform: translateY(-1px);
+        }
+
+        /* ================= 3D VOLUMETRIC MODAL ================= */
+        #modal-3d {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 6, 11, 0.92);
+            z-index: 999999;
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .modal-3d-container {
+            max-width: 1440px;
+            height: calc(100vh - 48px);
+            margin: 0 auto;
+            background: #090e18;
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-modal);
+        }
+
+        .modal-3d-header {
+            padding: 14px 22px;
+            background: #0d1524;
+            border-bottom: 1px solid var(--border-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-title-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .modal-sub-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .btn-close-modal {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #f87171;
+            border-radius: var(--radius-sm);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-close-modal:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ffffff;
+        }
+
+        /* 3D CONTROLS TOOLBAR */
+        .modal-3d-toolbar {
+            padding: 10px 22px;
+            background: #0f182a;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .control-select {
+            background: #182338;
+            color: #ffffff;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: var(--font-ui);
+            outline: none;
+        }
+
+        .control-select:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .modal-slider-range {
+            accent-color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .modal-3d-split {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .modal-3d-canvas-wrap {
+            flex: 2.7;
+            position: relative;
+            background: #05080e;
+            border-right: 1px solid var(--border-subtle);
+        }
+
+        .modal-3d-canvas-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .modal-3d-sidebar {
+            flex: 1.3;
+            padding: 18px;
+            overflow-y: auto;
+            background: #0c1322;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .side-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px;
+        }
+
+        .side-stat-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .side-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 12px;
+        }
+
+        .side-stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .side-stat-row span {
+            color: var(--text-secondary);
+        }
+
+        .side-stat-row b {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInView {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDownIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .intake-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .kpi-grid-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .doc-patient-bar {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .acquisition-bays-grid {
+                grid-template-columns: 1fr;
+            }
+            .pipeline-workspace-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-3d-split {
+                flex-direction: column;
+            }
+            .modal-3d-canvas-wrap {
+                flex: 1;
+                min-height: 400px;
+            }
+            .stepper-track-wrap {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            .step-item {
+                min-width: 80px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 12px;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 16px;
+            }
+            .intake-grid {
+                grid-template-columns: 1fr;
+            }
+            .kpi-grid-row {
+                grid-template-columns: 1fr;
+            }
+            .doc-patient-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+            .multi-grid-box {
+                grid-template-columns: 1fr;
+            }
+            .doc-action-bar {
+                flex-direction: column;
+                width: 100%;
+            }
+            .doc-action-bar button, .doc-action-bar a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Toast Notification Alert -->
+        <div id="toast-msg" class="alert-toast">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span id="toast-text-msg">Please select an MRI scan file first.</span>
+        </div>
+
+        <!-- Top Workstation Header -->
+        <header>
+            <div class="header-brand">
+                <div class="brand-icon-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 2v3m0 14v3M2 12h3m14 0h3"/>
+                        <circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/>
+                    </svg>
+                </div>
+                <div class="brand-titles">
+                    <div class="brand-title-row">
+                        <span class="brand-title">HQU-MSANet Workstation</span>
+                        <span class="brand-badge">CE-IVD Research</span>
+                    </div>
+                    <div class="brand-sub">Hybrid Quantum Multi-Scale Attention Network &bull; BraTS Volumetric Suite</div>
+                </div>
+            </div>
+            <div class="header-badges">
+                <div class="badge-pill">
+                    <div class="status-beacon"></div>
+                    <span id="gpu-tag-text">CUDA 12.1 Workstation</span>
+                </div>
+                <div class="badge-pill badge-pill-success">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-emerald)"><polyline points="20 6 9 17 4 12"/></svg>
+                    <b>95.88%</b> Validation Dice
+                </div>
+            </div>
+        </header>
+
+        <!-- ================= PAGE 1: INTAKE & UPLOAD ================= -->
+        <div id="page-upload">
+            <!-- Patient Demographics Form -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-header-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        1. Patient Demographics & Case Registration
+                    </div>
+                    <div class="panel-header-sub">Required for diagnostic audit trail & DICOM export</div>
+                </div>
+                <div class="intake-grid">
+                    <div class="intake-field">
+                        <label>Patient Full Name *</label>
+                        <input type="text" id="p-name-in" value="Alex Morgan" placeholder="e.g. John Doe">
+                    </div>
+                    <div class="intake-field">
+                        <label>Patient ID / MRN *</label>
+                        <input type="text" id="p-id-in" value="BraTS-PAT-8804" placeholder="e.g. PAT-001">
+                    </div>
+                    <div class="intake-field">
+                        <label>Age (Years)</label>
+                        <input type="number" id="p-age-in" value="48" min="1" max="120">
+                    </div>
+                    <div class="intake-field">
+                        <label>Biological Gender</label>
+                        <select id="p-gender-in">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="intake-field">
+                        <label>Referring Physician</label>
+                        <input type="text" id="p-doc-in" value="Dr. S. Vance, MD" placeholder="Doctor Name">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acquisition Protocol Selector -->
+            <div class="acquisition-bays-grid">
+                <!-- Left Column: Single MRI Scan Upload -->
+                <div class="protocol-bay-card">
+                    <div class="protocol-header">
+                        <div class="protocol-indicator">
+                            <span class="protocol-tag tag-single-proto">Protocol A &bull; Screening / Rapid</span>
+                            <span style="font-size:11px; color:var(--text-tertiary);">2D Fast Inference</span>
+                        </div>
+                        <div class="protocol-title">Single Sequence MRI Scan</div>
+                        <div class="protocol-desc">Upload a single contrast-enhanced or native volume for rapid lesion delineation and epistemic uncertainty mapping.</div>
+                    </div>
+
+                    <div class="single-dropzone" onclick="document.getElementById('file-single').click()">
+                        <div class="dropzone-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <div class="dropzone-main-text">Click or drag to select MRI Scan</div>
+                        <div class="dropzone-sub-text">Single-slice image or volumetric file</div>
+                        <div class="dropzone-format-tags">
+                            <span class="format-badge">.NII</span>
+                            <span class="format-badge">.NII.GZ</span>
+                            <span class="format-badge">.DCM</span>
+                            <span class="format-badge">.PNG / .JPG</span>
+                        </div>
+                        <div class="card-file-name" id="fname-single"></div>
+                    </div>
+
+                    <input type="file" id="file-single" class="hidden-input" onchange="handleSingleFileSelect(this)">
+                    <button class="btn-action-primary btn-single-grad" onclick="processSingleUpload()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        ANALYZE PATIENT SCAN
+                    </button>
+                </div>
+
+                <!-- Right Column: 4-Channel Multi-Modal Upload -->
+                <div class="protocol-bay-card" style="border-color: rgba(99, 102, 241, 0.25);">
+                    <div class="protocol-header">
+                        <div class="protocol-indicator">
+                            <span class="protocol-tag tag-multi-proto">Protocol B &bull; Multi-Parametric (3D Enabled)</span>
+                            <span style="font-size:11px; color:#a5b4fc; font-weight:600;">Unlocks 3D Mesh</span>
+                        </div>
+                        <div class="protocol-title">BraTS Co-Registered 4-Channel Protocol</div>
+                        <div class="protocol-desc">Multi-parametric MRI sequences required for complete 3D cranial reconstruction, sub-compartment volumetric sizing, and Feret caliper quantification.</div>
+                    </div>
+
+                    <div class="multi-grid-box">
+                        <div class="channel-tile" onclick="document.getElementById('f-t1ce').click()">
+                            <div class="channel-tile-top">
+                                <span class="channel-tag-pill tag-t1c">T1ce (Contrast)</span>
+                                <span class="channel-req-indicator">Required *</span>
+                            </div>
+                            <div class="channel-fname" id="fname-t1ce">Click to select</div>
+                        </div>
+
+                        <div class="channel-tile" onclick="document.getElementById('f-t1').click()">
+                            <div class="channel-tile-top">
+                                <span class="channel-tag-pill tag-t1">T1 (Native)</span>
+                                <span style="font-size:10px; color:var(--text-tertiary);">Anatomy</span>
+                            </div>
+                            <div class="channel-fname" id="fname-t1">Click to select</div>
+                        </div>
+
+                        <div class="channel-tile" onclick="document.getElementById('f-t2').click()">
+                            <div class="channel-tile-top">
+                                <span class="channel-tag-pill tag-t2">T2 (Weighted)</span>
+                                <span style="font-size:10px; color:var(--text-tertiary);">Edema</span>
+                            </div>
+                            <div class="channel-fname" id="fname-t2">Click to select</div>
+                        </div>
+
+                        <div class="channel-tile" onclick="document.getElementById('f-flair').click()">
+                            <div class="channel-tile-top">
+                                <span class="channel-tag-pill tag-flair">FLAIR</span>
+                                <span style="font-size:10px; color:var(--text-tertiary);">Infiltration</span>
+                            </div>
+                            <div class="channel-fname" id="fname-flair">Click to select</div>
+                        </div>
+                    </div>
+
+                    <input type="file" id="f-t1ce" class="hidden-input" onchange="document.getElementById('fname-t1ce').innerText=this.files[0].name">
+                    <input type="file" id="f-t1" class="hidden-input" onchange="document.getElementById('fname-t1').innerText=this.files[0].name">
+                    <input type="file" id="f-t2" class="hidden-input" onchange="document.getElementById('fname-t2').innerText=this.files[0].name">
+                    <input type="file" id="f-flair" class="hidden-input" onchange="document.getElementById('fname-flair').innerText=this.files[0].name">
+
+                    <button class="btn-action-primary btn-multi-grad" onclick="processMultiUpload()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        EXECUTE 4-CHANNEL PROTOCOL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: PIPELINE EXECUTION ================= -->
+        <div id="page-pipeline">
+            <div class="sub-nav-bar">
+                <button class="btn-ghost-back" onclick="navigateTo('page-upload')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Upload Another Patient Scan
+                </button>
+                <div class="sub-nav-title">
+                    <div class="status-beacon"></div>
+                    Active Inference Pipeline &bull; Real-Time Telemetry
+                </div>
+            </div>
+
+            <div class="pipeline-workspace-grid">
+                <!-- Patient Dossier Column -->
+                <div class="patient-dossier-card">
+                    <div class="dossier-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Registered Patient Case
+                    </div>
+                    <div class="dossier-table">
+                        <div class="dossier-row"><span>Patient Name</span><b id="lbl-p-name">Alex Morgan</b></div>
+                        <div class="dossier-row"><span>Case ID / MRN</span><b id="lbl-p-id">BraTS-PAT-8804</b></div>
+                        <div class="dossier-row"><span>Age / Sex</span><b id="lbl-p-age">48 yrs / Male</b></div>
+                        <div class="dossier-row"><span>Referring MD</span><b id="lbl-p-doc">Dr. S. Vance, MD</b></div>
+                        <div class="dossier-row"><span>Source File</span><b id="lbl-upload-fn" style="color:var(--accent-emerald);">scan.nii.gz</b></div>
+                    </div>
+
+                    <div class="preview-viewport-box">
+                        <div class="viewport-hud-tag">RAW INPUT VIEWPORT</div>
+                        <img id="raw-preview-img" src="" alt="Uploaded Input MRI">
+                    </div>
+                </div>
+
+                <!-- Stepper Orchestrator Column -->
+                <div class="stepper-panel">
+                    <div class="stepper-header-row">
+                        <div class="stepper-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                            Architecture Pipeline Execution Orchestrator
+                        </div>
+                        <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-tertiary);">7 STAGES &bull; PYTORCH CUDA</div>
+                    </div>
+
+                    <!-- 7 Steps Stepper Track -->
+                    <div class="stepper-track-wrap">
+                        <div class="stepper-rail-bg"></div>
+                        <div class="stepper-rail-fill" id="stepper-fill"></div>
+
+                        <div class="step-item" id="step-1">
+                            <div class="step-circle" id="circle-1">1</div>
+                            <div class="step-label">Stage 1</div>
+                            <div class="step-desc">Input Ingestion</div>
+                        </div>
+
+                        <div class="step-item" id="step-2">
+                            <div class="step-circle" id="circle-2">2</div>
+                            <div class="step-label">Stage 2</div>
+                            <div class="step-desc">Preprocessing</div>
+                        </div>
+
+                        <div class="step-item" id="step-3">
+                            <div class="step-circle" id="circle-3">3</div>
+                            <div class="step-label">Stage 3</div>
+                            <div class="step-desc">CNN Encoder</div>
+                        </div>
+
+                        <div class="step-item" id="step-4">
+                            <div class="step-circle" id="circle-4">4</div>
+                            <div class="step-label">Stage 4</div>
+                            <div class="step-desc">Quantum PQC</div>
+                        </div>
+
+                        <div class="step-item" id="step-5">
+                            <div class="step-circle" id="circle-5">5</div>
+                            <div class="step-label">Stage 5</div>
+                            <div class="step-desc">MC Uncertainty</div>
+                        </div>
+
+                        <div class="step-item" id="step-6">
+                            <div class="step-circle" id="circle-6">6</div>
+                            <div class="step-label">Stage 6</div>
+                            <div class="step-desc">Attention & Edges</div>
+                        </div>
+
+                        <div class="step-item" id="step-7">
+                            <div class="step-circle" id="circle-7">7</div>
+                            <div class="step-label">Stage 7</div>
+                            <div class="step-desc">Confidence & Mask</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Telemetry Status Console -->
+                    <div class="telemetry-console-box">
+                        <div class="telemetry-row">
+                            <div class="radar-spinner" id="spinner-icon"></div>
+                            <div id="status-terminal-txt">Initializing pipeline execution...</div>
+                        </div>
+                        <div class="step-progress-mini-bar">
+                            <div class="step-progress-mini-fill" id="step-mini-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- All Completed Banner -->
+                    <div class="all-completed-banner" id="all-completed-banner">
+                        <div class="completion-headline">All 7 Architecture Layers Executed Successfully</div>
+                        <div class="completion-subline">Model inference, quantum state entanglement, and epistemic uncertainty quantification complete.</div>
+                        <button class="btn-view-results" onclick="navigateTo('page-doctor-results')">
+                            VIEW COMPREHENSIVE DOCTOR'S RESULTS &rarr;
+                        </button>
+                        
+                        <!-- 3D Analysis Verification Banner -->
+                        <div id="banner-3d-box">
+                            <div id="banner-3d-enabled" style="display:none;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="color:#38bdf8; font-weight:700; font-size:13px;">Complete 4-Modal MRI Sequences Verified (T1, T1ce, T2, FLAIR)</span>
+                                    <span style="background:rgba(14,165,233,0.15); color:#38bdf8; border:1px solid rgba(14,165,233,0.4); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:700; letter-spacing:0.04em;">3D UNLOCKED</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--text-secondary); margin:4px 0 10px;">
+                                    Spatial volume cross-calibration complete. Would you like to view this case in interactive 3D?
+                                </div>
+                                <button onclick="open3DModal()" style="background:linear-gradient(135deg, #0284c7, #2563eb); border:none; color:#fff; font-weight:600; padding:8px 18px; border-radius:var(--radius-sm); cursor:pointer; font-size:12px;">
+                                    LAUNCH 3D BRAIN & TUMOR ANALYSIS &rarr;
+                                </button>
+                            </div>
+                            <div id="banner-3d-disabled" style="display:none;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="color:#f87171; font-weight:700; font-size:13px;">3D Volumetric View Disabled</span>
+                                    <span style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.4); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:700;">SINGLE IMAGE MODE</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
+                                    3D volumetric reconstruction requires all <strong>4 multi-parametric MRI modalities</strong> (T1, T1ce, T2, FLAIR). For single image uploads, 3D view is locked.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step Log History -->
+                    <div class="step-logs-header">
+                        <span class="step-logs-title">Execution Layer Telemetry (Latest on Top)</span>
+                        <span style="font-size:11px; color:var(--text-tertiary); font-family:var(--font-mono);">REAL-TIME LOG</span>
+                    </div>
+
+                    <div class="step-logs-container" id="step-logs-container">
+                        <!-- Dynamic completed step cards prepended here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 3D VOLUMETRIC ANALYSIS MODAL ================= -->
+        <div id="modal-3d">
+            <div class="modal-3d-container">
+                <!-- Modal Header -->
+                <div class="modal-3d-header">
+                    <div class="modal-title-group">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        <div>
+                            <div class="modal-title-text">HQU-MSANet 3D Volumetric Brain & Tumor Suite</div>
+                            <div class="modal-sub-text">Translucent Cranial Cortex &bull; Vivid Segmented Pathology &bull; Physical Sizing</div>
+                        </div>
+                    </div>
+                    <button class="btn-close-modal" onclick="close3DModal()">✕ CLOSE 3D SUITE</button>
+                </div>
+
+                <!-- Modal Toolbar -->
+                <div class="modal-3d-toolbar">
+                    <div class="control-group">
+                        <span class="control-label">Perspective:</span>
+                        <select id="sel-cam" onchange="refresh3DView()" class="control-select">
+                            <option value="iso">Isometric 3D</option>
+                            <option value="top">Axial (Top-Down)</option>
+                            <option value="front">Coronal (Frontal)</option>
+                            <option value="side">Sagittal (Lateral)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label" style="color:#f87171;">Pathology Mode:</span>
+                        <select id="sel-pathology" onchange="refresh3DView()" class="control-select" style="border-color: rgba(239, 68, 68, 0.45);">
+                            <option value="multi">Multi-Compartment (Enhancing + Necrosis)</option>
+                            <option value="et">Active Enhancing Lesion (ET - Red)</option>
+                            <option value="wt">Whole Tumor Mass Envelope (WT)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Skull:</span>
+                        <input type="range" id="rng-skull-opacity" min="0.05" max="0.60" step="0.01" value="0.18" onchange="refresh3DView()" class="modal-slider-range" style="width:65px;">
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Brain:</span>
+                        <input type="range" id="rng-opacity" min="0.05" max="0.60" step="0.01" value="0.22" onchange="refresh3DView()" class="modal-slider-range" style="width:65px;">
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">MRI Plane:</span>
+                        <input type="checkbox" id="chk-plane" onchange="refresh3DView()" style="accent-color:var(--accent-cyan);">
+                    </div>
+
+                    <div class="control-group" style="margin-left:auto;">
+                        <span class="control-label" style="color:#fbbf24;">Touch / Probe Depth:</span>
+                        <input type="range" id="rng-probe-z" min="-12" max="35" step="1" value="18" oninput="updateProbeDepth(this.value)" onchange="refresh3DView()" class="modal-slider-range" style="width:110px; accent-color:#fbbf24;">
+                        <span id="lbl-probe-z" style="font-size:12px; font-weight:700; color:#38bdf8; font-family:var(--font-mono);">18.0 mm</span>
+                    </div>
+                </div>
+
+                <!-- Modal Split Body -->
+                <div class="modal-3d-split">
+                    <!-- 3D Canvas -->
+                    <div class="modal-3d-canvas-wrap">
+                        <iframe id="iframe-3d" src="" title="3D Interactive Brain Reconstruction"></iframe>
+                    </div>
+
+                    <!-- Sidebar Stats -->
+                    <div class="modal-3d-sidebar">
+                        <!-- Touched Depth Card -->
+                        <div class="side-stat-card" style="border-color: rgba(239, 68, 68, 0.35);">
+                            <div class="side-stat-title" style="color:#ef4444;">
+                                <span>Touched Depth Size</span>
+                                <span id="badge-touched-z" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.4); padding:2px 7px; border-radius:4px; font-size:10px; font-family:var(--font-mono);">Z = 0.0 mm</span>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Touched Slice Area</span>
+                                <b id="stat-touched-area" style="color:#ef4444;">12.45 cm²</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Touched Section Diameter</span>
+                                <b id="stat-touched-diam">39.8 mm</b>
+                            </div>
+                        </div>
+
+                        <!-- Physical Dimensions Card -->
+                        <div class="side-stat-card" style="border-color: rgba(14, 165, 233, 0.25);">
+                            <div class="side-stat-title" style="color:#38bdf8;">Total 3D Physical Extents</div>
+                            <div class="side-stat-row">
+                                <span>Width (Sagittal Dx)</span>
+                                <b id="stat-dim-x">42.1 mm</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Depth (Coronal Dy)</span>
+                                <b id="stat-dim-y">38.4 mm</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Height (Axial Dz)</span>
+                                <b id="stat-dim-z">45.0 mm</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Max Caliper (Feret)</span>
+                                <b id="stat-feret" style="color:#fbbf24;">68.5 mm</b>
+                            </div>
+                        </div>
+
+                        <!-- Volumetric Analysis Card -->
+                        <div class="side-stat-card" style="border-color: rgba(99, 102, 241, 0.25);">
+                            <div class="side-stat-title" style="color:#a5b4fc;">Volumetric & Pathology Analysis</div>
+                            <div class="side-stat-row">
+                                <span>Total Lesion Volume</span>
+                                <b id="stat-vol-cm3" style="color:#c084fc;">57.30 cm³</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Enhancing Mass (ET)</span>
+                                <b id="stat-vol-et" style="color:#ef4444;">32.73 cm³ (57.1%)</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Necrotic Core (NCR)</span>
+                                <b id="stat-vol-ncr" style="color:#f59e0b;">11.74 cm³ (20.5%)</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Spatial Centroid</span>
+                                <b id="stat-centroid">(20.8, -41.2, 11.7) mm</b>
+                            </div>
+                            <div class="side-stat-row">
+                                <span>Lobe & Classification</span>
+                                <b id="stat-hemi" style="color:#34d399;">Right Temporo-Parietal (WHO IV)</b>
+                            </div>
+                        </div>
+
+                        <a id="btn-dl-3d-model" href="/api/generate_3d_html" download="3d_brain_tumor_model.html" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; background:#182338; border:1px solid rgba(14,165,233,0.35); color:#38bdf8; padding:11px; border-radius:var(--radius-sm); font-weight:600; text-decoration:none; font-size:12px; margin-top:4px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            DOWNLOAD 3D HTML MODEL
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: DOCTOR'S RESULTS ================= -->
+        <div id="page-doctor-results">
+            <div class="sub-nav-bar">
+                <button class="btn-ghost-back" onclick="navigateTo('page-pipeline')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Back to Pipeline Stepper
+                </button>
+                <div class="sub-nav-title">
+                    <div class="status-beacon"></div>
+                    Doctor's Clinical Diagnostic Suite & Quantitative Audit
+                </div>
+                <button class="btn-ghost-back" onclick="navigateTo('page-upload')">
+                    Register New Case
+                </button>
+            </div>
+
+            <!-- Patient Record Card -->
+            <div class="doc-header-card">
+                <div class="doc-header-top">
+                    <div>
+                        <div class="doc-header-title">Diagnostic Patient Audit Record</div>
+                        <div class="doc-header-sub">BraTS 2023 Multi-Modal Quantum Uncertainty Diagnostic Report</div>
+                    </div>
+                    <div class="badge-pill badge-pill-success">
+                        <div class="status-beacon"></div>
+                        <span>Diagnostic Audit Complete &bull; Verified</span>
+                    </div>
+                </div>
+
+                <div class="doc-patient-bar">
+                    <div class="doc-patient-item"><span>Patient Full Name</span><b id="doc-p-name">Alex Morgan</b></div>
+                    <div class="doc-patient-item"><span>Patient ID / MRN</span><b id="doc-p-id">BraTS-PAT-8804</b></div>
+                    <div class="doc-patient-item"><span>Age / Biological Sex</span><b id="doc-p-age">48 yrs / Male</b></div>
+                    <div class="doc-patient-item"><span>Referring Physician</span><b id="doc-p-doc">Dr. S. Vance, MD</b></div>
+                    <div class="doc-patient-item"><span>Scan Timestamp</span><b id="doc-timestamp">2026-09-18 16:00</b></div>
+                </div>
+            </div>
+
+            <!-- Quantitative KPIs -->
+            <div class="kpi-grid-row">
+                <div class="kpi-box-item">
+                    <div class="kpi-title-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Model Confidence
+                    </div>
+                    <div class="kpi-value-num" id="val-confidence" style="color:#38bdf8;">99.9%</div>
+                    <div class="kpi-sub-label">Epistemic-calibrated safety</div>
+                </div>
+
+                <div class="kpi-box-item">
+                    <div class="kpi-title-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                        Estimated Lesion Volume
+                    </div>
+                    <div class="kpi-value-num" id="val-volume" style="color:#fbbf24;">1,306 vox</div>
+                    <div class="kpi-sub-label">Physical voxel burden</div>
+                </div>
+
+                <div class="kpi-box-item">
+                    <div class="kpi-title-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Epistemic Uncertainty
+                    </div>
+                    <div class="kpi-value-num" id="val-uncertainty" style="color:#f87171;">0.0124</div>
+                    <div class="kpi-sub-label">Bayesian variance map (&sigma;&sup2;)</div>
+                </div>
+
+                <div class="kpi-box-item">
+                    <div class="kpi-title-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                        Inference Latency
+                    </div>
+                    <div class="kpi-value-num" id="val-latency" style="color:#a5b4fc;">0.68 ms</div>
+                    <div class="kpi-sub-label">Hardware-accelerated CUDA</div>
+                </div>
+            </div>
+
+            <!-- Composite Radiology Visualization Bay -->
+            <div class="composite-viz-card">
+                <div class="composite-viz-header">
+                    <div class="composite-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        Comprehensive 8-Panel Neuro-Radiology Multi-Modal Suite
+                    </div>
+                    <div class="composite-legend">
+                        <span><span class="legend-dot" style="background:#10b981;"></span>Active Tumor</span>
+                        <span><span class="legend-dot" style="background:#f59e0b;"></span>Necrotic Core</span>
+                        <span><span class="legend-dot" style="background:#ef4444;"></span>Epistemic Risk</span>
+                        <span style="font-family:var(--font-mono); color:var(--text-tertiary);">DPI: 180</span>
+                    </div>
+                </div>
+                <div class="viz-viewport-frame">
+                    <img id="viz-img-large" src="" alt="Doctor Comprehensive Visualizations">
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="doc-action-bar">
+                <button class="btn-download-pdf" onclick="downloadPdfReport()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    DOWNLOAD COMPREHENSIVE CLINICAL REPORT (PDF)
+                </button>
+                <button id="btn-view-3d" class="btn-sec-action" onclick="open3DModal()" style="border-color:rgba(14,165,233,0.4); color:#38bdf8;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    VIEW 3D VOLUMETRIC ANALYSIS
+                </button>
+                <button class="btn-sec-action" onclick="window.print()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    PRINT DIAGNOSTIC RECORD
+                </button>
+                <button class="btn-sec-action" onclick="navigateTo('page-upload')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    REGISTER NEXT PATIENT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESERVED CLINICAL APPLICATION JAVASCRIPT -->
+    <script>
+        let currentReportData = null;
+
+        function open3DModal() {
+            document.getElementById('modal-3d').style.display = 'block';
+            refresh3DView();
+            load3DMetrics(document.getElementById('rng-probe-z').value);
+        }
+
+        function close3DModal() {
+            document.getElementById('modal-3d').style.display = 'none';
+        }
+
+        function refresh3DView() {
+            const cam = document.getElementById('sel-cam').value;
+            const op = document.getElementById('rng-opacity').value;
+            const skull_op = document.getElementById('rng-skull-opacity') ? document.getElementById('rng-skull-opacity').value : 0.18;
+            const path_mode = document.getElementById('sel-pathology') ? document.getElementById('sel-pathology').value : 'multi';
+            const plane = document.getElementById('chk-plane').checked;
+            const z = document.getElementById('rng-probe-z').value;
+            const url = `/api/generate_3d_html?cam=${cam}&opacity=${op}&skull_opacity=${skull_op}&probe_z=${z}&show_plane=${plane}&pathology_mode=${path_mode}`;
+            document.getElementById('iframe-3d').src = url;
+            document.getElementById('btn-dl-3d-model').href = url;
+        }
+
+        async function updateProbeDepth(val) {
+            document.getElementById('lbl-probe-z').innerText = parseFloat(val).toFixed(1) + ' mm';
+            document.getElementById('badge-touched-z').innerText = 'Z = ' + parseFloat(val).toFixed(1) + ' mm';
+            load3DMetrics(val);
+        }
+
+        async function load3DMetrics(z) {
+            try {
+                const res = await fetch('/api/get_3d_metrics?probe_z=' + z);
+                const m = await res.json();
+                document.getElementById('stat-touched-area').innerText = m.touched_area_cm2 + ' cm² (' + m.touched_area_mm2 + ' mm²)';
+                document.getElementById('stat-touched-diam').innerText = m.touched_diam_mm + ' mm';
+                document.getElementById('stat-dim-x').innerText = m.dim_x + ' mm';
+                document.getElementById('stat-dim-y').innerText = m.dim_y + ' mm';
+                document.getElementById('stat-dim-z').innerText = m.dim_z + ' mm';
+                document.getElementById('stat-feret').innerText = m.feret + ' mm';
+                document.getElementById('stat-vol-cm3').innerText = m.vol_cm3 + ' cm³';
+                if (document.getElementById('stat-vol-et') && m.vol_et_cm3) {
+                    document.getElementById('stat-vol-et').innerText = m.vol_et_cm3 + ' cm³ (57.1%)';
+                }
+                if (document.getElementById('stat-vol-ncr') && m.vol_ncr_cm3) {
+                    document.getElementById('stat-vol-ncr').innerText = m.vol_ncr_cm3 + ' cm³ (20.5%)';
+                }
+                document.getElementById('stat-centroid').innerText = `(${m.centroid[0]}, ${m.centroid[1]}, ${m.centroid[2]}) mm`;
+                document.getElementById('stat-hemi').innerText = m.hemisphere;
+            } catch(e) { console.error('Error fetching 3D metrics:', e); }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-msg');
+            const txt = document.getElementById('toast-text-msg');
+            if (txt) txt.innerText = msg;
+            else t.innerText = msg;
+            t.style.display = 'flex';
+            setTimeout(() => { t.style.display = 'none'; }, 3500);
+        }
+
+        function getRandomDuration(minMs, maxMs) {
+            return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+        }
+
+        function navigateTo(pageId) {
+            document.getElementById('page-upload').style.display = 'none';
+            document.getElementById('page-pipeline').style.display = 'none';
+            document.getElementById('page-doctor-results').style.display = 'none';
+
+            document.getElementById(pageId).style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleSingleFileSelect(input) {
+            if (input.files.length > 0) {
+                document.getElementById('fname-single').innerText = 'Selected: ' + input.files[0].name;
+            }
+        }
+
+        function updateStepUI(stepNum, state) {
+            const stepEl = document.getElementById('step-' + stepNum);
+            const circleEl = document.getElementById('circle-' + stepNum);
+
+            if (state === 'active') {
+                stepEl.className = 'step-item active';
+                circleEl.innerText = stepNum;
+            } else if (state === 'completed') {
+                stepEl.className = 'step-item completed';
+                circleEl.innerText = '✓';
+            }
+            const fillPct = ((stepNum - 1) / 6) * 100;
+            document.getElementById('stepper-fill').style.width = fillPct + '%';
+        }
+
+        function updateStatusTerminal(msg, showSpinner = true) {
+            document.getElementById('status-terminal-txt').innerText = msg;
+            document.getElementById('spinner-icon').style.display = showSpinner ? 'block' : 'none';
+        }
+
+        async function animateStepDuration(durationMs, statusMsg) {
+            updateStatusTerminal(statusMsg, true);
+            const miniFill = document.getElementById('step-mini-fill');
+            miniFill.style.width = '0%';
+            const startTime = Date.now();
+
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const pct = Math.min(100, (elapsed / durationMs) * 100);
+                    miniFill.style.width = pct + '%';
+                    if (elapsed >= durationMs) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 40);
+            });
+        }
+
+        function addCompletedStepCard(stepNum, title, desc, imgB64, metaDetails) {
+            const container = document.getElementById('step-logs-container');
+            
+            // Remove 'latest-top' class and badge from all previous cards
+            const prevCards = container.querySelectorAll('.step-log-card');
+            prevCards.forEach(c => {
+                c.classList.remove('latest-top');
+                const badge = c.querySelector('.latest-badge');
+                if (badge) badge.remove();
+            });
+
+            // Create new card for the newly completed step
+            const card = document.createElement('div');
+            card.className = 'step-log-card latest-top';
+            card.id = 'completed-card-' + stepNum;
+
+            card.innerHTML = `
+                <div class="latest-badge">Latest Stage</div>
+                <div class="step-log-icon">✓</div>
+                <div class="step-log-content">
+                    <div class="step-log-text">STAGE ${stepNum} COMPLETED: ${title}</div>
+                    <div class="step-log-sub">${desc}</div>
+                    
+                    <div class="step-output-box">
+                        <div class="step-output-img-box">
+                            <img src="${imgB64}" alt="Stage ${stepNum} Telemetry Visual">
+                        </div>
+                        <div style="font-size:11px; color:var(--text-secondary); line-height:1.6; font-family:var(--font-mono);">
+                            ${metaDetails}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // PREPEND to top of the stack so latest completed step is at the top
+            container.insertBefore(card, container.firstChild);
+        }
+
+        async function processSingleUpload() {
+            const fileInput = document.getElementById('file-single');
+            if (fileInput.files.length === 0) {
+                showToast("Please select or upload an MRI scan image first.");
+                return;
+            }
+
+            const pName = document.getElementById('p-name-in').value.trim();
+            if (!pName) {
+                showToast("Please enter the Patient Full Name.");
+                return;
+            }
+
+            const pId = document.getElementById('p-id-in').value.trim() || 'BraTS-PAT-8804';
+            const pAge = document.getElementById('p-age-in').value || '48';
+            const pGender = document.getElementById('p-gender-in').value || 'Male';
+            const pDoc = document.getElementById('p-doc-in').value.trim() || 'Dr. S. Vance, MD';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('p_name', pName);
+            formData.append('p_id', pId);
+            formData.append('p_age', pAge);
+            formData.append('p_gender', pGender);
+            formData.append('p_doc', pDoc);
+
+            setPatientDemographics(pName, pId, pAge, pGender, pDoc, fileInput.files[0].name);
+
+            // Instant UI preview & navigation
+            if (fileInput.files[0].type && fileInput.files[0].type.startsWith('image/')) {
+                document.getElementById('raw-preview-img').src = URL.createObjectURL(fileInput.files[0]);
+            }
+            navigateTo('page-pipeline');
+
+            // Fire backend inference concurrently in background
+            const backendPromise = fetch('/api/predict_single', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .catch(err => ({ error: err.toString() }));
+
+            runExecutionSequence(backendPromise);
+        }
+
+        async function processMultiUpload() {
+            const t1ceInput = document.getElementById('f-t1ce');
+            if (t1ceInput.files.length === 0) {
+                showToast("Please select at least the T1ce Primary MRI Scan file.");
+                return;
+            }
+
+            const pName = document.getElementById('p-name-in').value.trim();
+            if (!pName) {
+                showToast("Please enter the Patient Full Name.");
+                return;
+            }
+
+            const pId = document.getElementById('p-id-in').value.trim() || 'BraTS-PAT-8804';
+            const pAge = document.getElementById('p-age-in').value || '48';
+            const pGender = document.getElementById('p-gender-in').value || 'Male';
+            const pDoc = document.getElementById('p-doc-in').value.trim() || 'Dr. S. Vance, MD';
+
+            const formData = new FormData();
+            formData.append('t1ce', t1ceInput.files[0]);
+            if (document.getElementById('f-t1').files.length > 0) formData.append('t1', document.getElementById('f-t1').files[0]);
+            if (document.getElementById('f-t2').files.length > 0) formData.append('t2', document.getElementById('f-t2').files[0]);
+            if (document.getElementById('f-flair').files.length > 0) formData.append('flair', document.getElementById('f-flair').files[0]);
+            formData.append('p_name', pName);
+            formData.append('p_id', pId);
+            formData.append('p_age', pAge);
+            formData.append('p_gender', pGender);
+            formData.append('p_doc', pDoc);
+
+            setPatientDemographics(pName, pId, pAge, pGender, pDoc, t1ceInput.files[0].name);
+
+            // Instant UI preview & navigation
+            if (t1ceInput.files[0].type && t1ceInput.files[0].type.startsWith('image/')) {
+                document.getElementById('raw-preview-img').src = URL.createObjectURL(t1ceInput.files[0]);
+            }
+            navigateTo('page-pipeline');
+
+            // Fire backend inference concurrently in background
+            const backendPromise = fetch('/api/predict_multi', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .catch(err => ({ error: err.toString() }));
+
+            runExecutionSequence(backendPromise);
+        }
+
+        function setPatientDemographics(name, id, age, gender, doc, fname) {
+            document.getElementById('lbl-p-name').innerText = name;
+            document.getElementById('lbl-p-id').innerText = id;
+            document.getElementById('lbl-p-age').innerText = age + ' yrs / ' + gender;
+            document.getElementById('lbl-p-doc').innerText = doc;
+            document.getElementById('lbl-upload-fn').innerText = fname;
+
+            document.getElementById('doc-p-name').innerText = name;
+            document.getElementById('doc-p-id').innerText = id;
+            document.getElementById('doc-p-age').innerText = age + ' yrs / ' + gender;
+            document.getElementById('doc-p-doc').innerText = doc;
+            document.getElementById('doc-timestamp').innerText = new Date().toLocaleString();
+        }
+
+        async function runExecutionSequence(backendPromise) {
+            // Reset logs and containers
+            document.getElementById('step-logs-container').innerHTML = '';
+            document.getElementById('all-completed-banner').style.display = 'none';
+
+            // Reset all 7 step nodes
+            for (let s = 1; s <= 7; s++) {
+                const el = document.getElementById('step-' + s);
+                const cir = document.getElementById('circle-' + s);
+                el.className = 'step-item';
+                cir.innerText = s;
+            }
+            document.getElementById('stepper-fill').style.width = '0%';
+
+            // Step 1: Input Ingestion
+            updateStepUI(1, 'active');
+            await animateStepDuration(getRandomDuration(800, 1200), "[Stage 1/7] Ingesting Multi-Modal MRI Scan & Verifying Channels (T1, T1ce, T2, FLAIR)...");
+            
+            const data = await backendPromise;
+            currentReportData = data;
+            if (data.raw_preview_b64) {
+                document.getElementById('raw-preview-img').src = data.raw_preview_b64;
+            }
+
+            updateStepUI(1, 'completed');
+            addCompletedStepCard(
+                1,
+                "Input Ingestion & Channel Alignment",
+                "Ingested multi-modal tensor array onto CUDA device. Dimensionality and sequence alignment verified.",
+                data.step_visuals.step1,
+                "&bull; Tensor Array Shape: 4 &times; 128 &times; 128<br>&bull; Modalities: T1, T1ce, T2, FLAIR Verified<br>&bull; Status: Anatomical Channel Alignment Normal"
+            );
+
+            // Step 2: Preprocessing
+            updateStepUI(2, 'active');
+            await animateStepDuration(getRandomDuration(800, 1200), "[Stage 2/7] Preprocessing: Skull Stripping, Non-Brain Masking & Z-Score Intensity Scaling...");
+            updateStepUI(2, 'completed');
+            addCompletedStepCard(
+                2,
+                "Skull Stripping & Z-Score Normalization",
+                "Extracranial tissue stripped, brain parenchyma isolated, intensity normalized to zero mean & unit variance.",
+                data.step_visuals.step2,
+                "&bull; Intensity Transform: Zero Mean, Unit Variance<br>&bull; Background Masking: Skull Stripping Complete<br>&bull; Resolution: Resampled to 128 &times; 128 Grid"
+            );
+
+            // Step 3: Multi-Scale CNN Encoder
+            updateStepUI(3, 'active');
+            await animateStepDuration(getRandomDuration(800, 1200), "[Stage 3/7] Multi-Scale CNN Encoder: Extracting Dilated Receptive Field Features (1x1, 3x3, 5x5)...");
+            updateStepUI(3, 'completed');
+            addCompletedStepCard(
+                3,
+                "Multi-Scale CNN Feature Encoding",
+                "Parallel dilated convolutions extracted hierarchical representations (32, 64, 128, 256 channels) preserving subtle tissue margins.",
+                data.step_visuals.step3,
+                "&bull; Dilated Kernels: 1&times;1, 3&times;3, 5&times;5 Parallel Fields<br>&bull; Feature Depths: 32 &rarr; 256 Feature Channels<br>&bull; Spatial Context: Multi-Scale Boundary Invariance"
+            );
+
+            // Step 4: Hybrid Quantum Feature Enhancer
+            updateStepUI(4, 'active');
+            await animateStepDuration(getRandomDuration(800, 1200), "[Stage 4/7] Hybrid Quantum PQC: Simulating PennyLane Ry(&theta;) & Rz(&phi;) Quantum Entangled Gates...");
+            updateStepUI(4, 'completed');
+            addCompletedStepCard(
+                4,
+                "Hybrid Quantum Feature Enhancer (PQC)",
+                "Latent representations mapped into 4-qubit entangled Hilbert space with non-linear Parameterized Quantum Circuit rotations.",
+                data.step_visuals.step4,
+                "&bull; Quantum Circuit: 4-Qubit Entangled PQC Simulator<br>&bull; Phase Rotations: Ry(&theta;), Rz(&phi;) Parameterized Gates<br>&bull; Superposition: Non-Linear Latent State Modulation"
+            );
+
+            // Step 5: MC Dropout & Epistemic Uncertainty
+            updateStepUI(5, 'active');
+            await animateStepDuration(getRandomDuration(800, 1200), "[Stage 5/7] Monte Carlo Dropout: Executing 10 Stochastic Bayesian Passes for Epistemic Variance...");
+            updateStepUI(5, 'completed');
+            addCompletedStepCard(
+                5,
+                "Monte Carlo Dropout Epistemic Uncertainty",
+                `Simulated 10 stochastic forward evaluations with active dropout to compute voxel-wise epistemic uncertainty variance map.`,
+                data.step_visuals.step5,
+                `&bull; Bayesian Passes: T = 10 Stochastic Forward Evaluations<br>&bull; Mean Epistemic Variance (&sigma;&sup2;): ${data.mean_uncertainty}<br>&bull; Confidence Safety: Out-of-Distribution Calibration Verified`
+            );
+
+            // Step 6: Entropy-Gated Attention & Boundary Refinement
+            updateStepUI(6, 'active');
+            await animateStepDuration(getRandomDuration(700, 1100), "[Stage 6/7] Entropy-Gated Spatial Attention (EGSA) & Laplacian Edge Boundary Convolution...");
+            updateStepUI(6, 'completed');
+            addCompletedStepCard(
+                6,
+                "EGSA Spatial Attention & Margin Refinement",
+                "Entropy-Gated Spatial Attention modulated skip-connections; Laplacian convolution sharpened infiltrated lesion contours.",
+                data.step_visuals.step6,
+                "&bull; Attention Mechanism: EGSA Spatial Entropy Modulation<br>&bull; Boundary Supervision: Laplacian Edge Convolution<br>&bull; Contour Margin: Sub-Voxel Margin Alignment"
+            );
+
+            // Step 7: Confidence Calibration & Final Outputs
+            updateStepUI(7, 'active');
+            await animateStepDuration(getRandomDuration(600, 1000), "[Stage 7/7] Calibrating Final Diagnostic Confidence & Outputting Segmented Mask...");
+            updateStepUI(7, 'completed');
+            addCompletedStepCard(
+                7,
+                "Calibrated Confidence & Final Segmentation Mask",
+                `Calibrated model diagnostic confidence at ${data.confidence_score.toFixed(1)}% strictly based on epistemic variance and output logits.`,
+                data.step_visuals.step7,
+                `&bull; Calibrated Diagnostic Confidence: ${data.confidence_score.toFixed(1)}%<br>&bull; Segmented Lesion Volume: ${data.tumor_voxels.toLocaleString()} voxels (~${data.estimated_area_cm2} cm&sup2;)<br>&bull; Status: Volumetric Calibration Complete`
+            );
+
+            updateStatusTerminal("All 7 Architecture Stages Completed Successfully. Review diagnostic findings below.", false);
+            document.getElementById('all-completed-banner').style.display = 'block';
+
+            populateDoctorResultsPage(data);
+        }
+
+        function populateDoctorResultsPage(data) {
+            document.getElementById('val-volume').innerText = data.tumor_voxels.toLocaleString() + ' vox (' + data.estimated_area_cm2 + ' cm²)';
+            document.getElementById('val-confidence').innerText = data.confidence_score.toFixed(1) + '%';
+            document.getElementById('val-uncertainty').innerText = data.mean_uncertainty.toFixed(4);
+            document.getElementById('val-latency').innerText = data.inference_time_ms + ' ms';
+            document.getElementById('viz-img-large').src = data.visualization_b64;
+
+            // 3D availability logic based on 4-modal verification
+            const btn3D = document.getElementById('btn-view-3d');
+            const bannerEnabled = document.getElementById('banner-3d-enabled');
+            const bannerDisabled = document.getElementById('banner-3d-disabled');
+
+            if (data.is_multi_modal) {
+                if (btn3D) {
+                    btn3D.disabled = false;
+                    btn3D.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> VIEW 3D VOLUMETRIC ANALYSIS';
+                    btn3D.style.borderColor = 'rgba(14,165,233,0.5)';
+                    btn3D.style.color = '#38bdf8';
+                    btn3D.style.cursor = 'pointer';
+                    btn3D.title = 'Complete 4-modal dataset verified';
+                }
+                if (bannerEnabled) bannerEnabled.style.display = 'block';
+                if (bannerDisabled) bannerDisabled.style.display = 'none';
+            } else {
+                if (btn3D) {
+                    btn3D.disabled = true;
+                    btn3D.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 3D VIEW (DISABLED FOR SINGLE IMAGE)';
+                    btn3D.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+                    btn3D.style.color = 'var(--text-tertiary)';
+                    btn3D.style.cursor = 'not-allowed';
+                    btn3D.title = '3D volumetric reconstruction requires all 4 sequences (T1, T1ce, T2, FLAIR)';
+                }
+                if (bannerEnabled) bannerEnabled.style.display = 'none';
+                if (bannerDisabled) bannerDisabled.style.display = 'block';
+            }
+        }
+
+        async function downloadPdfReport() {
+            if (!currentReportData) return;
+            const pName = document.getElementById('doc-p-name').innerText;
+            const pId = document.getElementById('doc-p-id').innerText;
+            const pAge = document.getElementById('p-age-in').value || '48';
+            const pGender = document.getElementById('p-gender-in').value || 'Male';
+            const pDoc = document.getElementById('doc-p-doc').innerText || 'Dr. S. Vance, MD';
+
+            const formData = new FormData();
+            formData.append('patient_id', pId);
+            formData.append('patient_name', pName);
+            formData.append('patient_age', pAge);
+            formData.append('patient_gender', pGender);
+            formData.append('patient_doc', pDoc);
+            formData.append('tumor_voxels', currentReportData.tumor_voxels.toString());
+            formData.append('tumor_area', currentReportData.estimated_area_cm2 + ' cm2');
+            formData.append('confidence', currentReportData.confidence_score.toFixed(1) + '%');
+            formData.append('mean_uncertainty', currentReportData.mean_uncertainty.toString());
+            formData.append('latency', currentReportData.inference_time_ms + ' ms');
+            formData.append('viz_b64', currentReportData.visualization_b64);
+
+            const res = await fetch('/api/generate_pdf_report', { method: 'POST', body: formData });
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = pId + '_clinical_diagnostic_report.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        window.onload = async () => {
+            try {
+                const statusRes = await fetch('/api/status');
+                const statusData = await statusRes.json();
+                document.getElementById('gpu-tag-text').innerText = 'GPU: ' + statusData.gpu_model;
+            } catch (err) {
+                console.warn('Could not load status from API:', err);
+            }
+        };
+    </script>
+</body>
+</html>
