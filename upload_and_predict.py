@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import nibabel as nib
 from model import HQUMSNet
 
-def run_interactive_prediction():
+def run_interactive_prediction(target_path=None):
     print("=" * 75)
     print(" HQU-MSANet Interactive Brain MRI Prediction & Diagnostics Tool")
     print("=" * 75)
@@ -32,28 +32,36 @@ def run_interactive_prediction():
     print(f"[+] Successfully Loaded Trained Model Weights: {os.path.basename(checkpoint_path)}")
     print(f"    - Model Accuracy (Validation Dice): {checkpoint.get('val_dice', 0.9614)*100:.2f}%")
 
-    # 2. Open GUI File Picker Window for MRI Folder / NIfTI selection
-    print("\n[!] Please select a Patient Folder or MRI (.nii.gz) file in the pop-up window...")
-    root = tk.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    
-    selected_path = filedialog.askdirectory(
-        title="Select Patient BraTS Directory (containing -t1c, -t1n, -t2w, -t2f files)"
-    )
-    
+    # 2. Select MRI Folder / NIfTI selection
+    selected_path = target_path
     if not selected_path:
-        # Fallback file picker for single .nii.gz file if directory was not picked
-        selected_path = filedialog.askopenfilename(
-            title="Select MRI T1c File (.nii.gz)",
-            filetypes=[("NIfTI Files", "*.nii.gz"), ("All Files", "*.*")]
-        )
-        if selected_path:
-            selected_path = os.path.dirname(selected_path)
+        try:
+            print("\n[!] Please select a Patient Folder or MRI (.nii.gz) file in the pop-up window...")
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes('-topmost', True)
             
+            selected_path = filedialog.askdirectory(
+                title="Select Patient BraTS Directory (containing -t1c, -t1n, -t2w, -t2f files)"
+            )
+            
+            if not selected_path:
+                selected_path = filedialog.askopenfilename(
+                    title="Select MRI T1c File (.nii.gz)",
+                    filetypes=[("NIfTI Files", "*.nii.gz"), ("All Files", "*.*")]
+                )
+                if selected_path:
+                    selected_path = os.path.dirname(selected_path)
+        except Exception as e:
+            print(f"[*] GUI File Dialog skipped or unavailable: {e}")
+
     if not selected_path:
-        print("[!] No directory or file selected. Exiting interactive tool.")
-        return
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        selected_path = os.path.join(base_dir, "sample_data", "BraTS-MEN-00004-000")
+        print(f"[*] No directory selected via GUI. Using fallback sample path: {selected_path}")
+        if not os.path.exists(os.path.join(selected_path, "BraTS-MEN-00004-000-t1c.nii.gz")):
+            from predict_patient import generate_sample_patient_nifti
+            generate_sample_patient_nifti(selected_path)
 
     p_id = os.path.basename(selected_path)
     print(f"\n[*] Selected Target Patient Scan: {p_id}")
@@ -177,8 +185,14 @@ def run_interactive_prediction():
     save_path = os.path.join(output_dir, f"{p_id}_interactive_prediction.png")
     plt.savefig(save_path, dpi=300)
     print(f"\n[+] Visual Diagnosis Exported to: {os.path.abspath(save_path)}")
-    print("[*] Displaying prediction plot window on screen...")
-    plt.show()
+    try:
+        plt.show(block=False)
+        plt.pause(1)
+        plt.close()
+    except Exception:
+        plt.close()
 
 if __name__ == "__main__":
-    run_interactive_prediction()
+    target = sys.argv[1] if len(sys.argv) > 1 else None
+    run_interactive_prediction(target)
+

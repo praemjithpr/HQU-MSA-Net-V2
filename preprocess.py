@@ -11,10 +11,18 @@ def prepare_preprocessed_dataset():
     Pre-converts 3D NIfTI volumes into fast, compressed 2D PyTorch cache files (.pt)
     This eliminates disk I/O bottlenecks and makes GPU training 50x FASTER!
     """
-    data_dir = "c:/final year project/actt net/ASNR-MICCAI-BraTS2023-MEN-Challenge-TrainingData/BraTS-MEN-Train"
-    cache_dir = "c:/final year project/actt net/processed_cache"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.getenv("BRATS_DATA_DIR", os.path.join(base_dir, "data", "BraTS-MEN-Train"))
+    cache_dir = os.path.join(base_dir, "processed_cache")
     os.makedirs(cache_dir, exist_ok=True)
     
+    if not os.path.exists(data_dir):
+        print(f"[*] Raw BraTS dataset directory '{data_dir}' not found.")
+        print(f"[*] Populating demo cache files in '{cache_dir}'...")
+        from fast_dataset import FastCachedBraTSDataset
+        dataset = FastCachedBraTSDataset(cache_dir=cache_dir)
+        return
+
     patient_dirs = sorted([
         os.path.join(data_dir, d) for d in os.listdir(data_dir)
         if os.path.isdir(os.path.join(data_dir, d))

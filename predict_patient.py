@@ -92,6 +92,26 @@ def run_single_patient_inference(patient_dir, output_dir="inference_output", mc_
     print(f" [+] Exported Prediction Visualization: {os.path.abspath(save_path)}")
     print("=" * 70)
 
+def generate_sample_patient_nifti(patient_dir):
+    os.makedirs(patient_dir, exist_ok=True)
+    p_id = os.path.basename(patient_dir)
+    modalities = ['t1c', 't1n', 't2w', 't2f']
+    shape = (128, 128, 90)
+    print(f"[*] Generating sample NIfTI MRI scan files for {p_id} in {patient_dir}...")
+    
+    for mod in modalities:
+        path = os.path.join(patient_dir, f"{p_id}-{mod}.nii.gz")
+        if not os.path.exists(path):
+            vol = np.random.randn(*shape).astype(np.float32)
+            # Add synthetic tumor hyperintensity in central slices
+            vol[45:85, 45:85, 30:60] += 2.0
+            nii = nib.Nifti1Image(vol, affine=np.eye(4))
+            nib.save(nii, path)
+
 if __name__ == "__main__":
-    sample_dir = "c:/final year project/actt net/ASNR-MICCAI-BraTS2023-MEN-Challenge-TrainingData/BraTS-MEN-Train/BraTS-MEN-00004-000"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    sample_dir = os.path.join(base_dir, "sample_data", "BraTS-MEN-00004-000")
+    if not os.path.exists(os.path.join(sample_dir, "BraTS-MEN-00004-000-t1c.nii.gz")):
+        generate_sample_patient_nifti(sample_dir)
     run_single_patient_inference(sample_dir)
+
